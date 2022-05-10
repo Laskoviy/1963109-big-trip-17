@@ -12,7 +12,7 @@ import CostInfoMainView from './view/test_price-view.js';
 import DestinationsModel from './model/destination-model.js';
 import OffersModel from './model/offers-model.js';
 import PointsModel from './model/points-model.js';
-import HeaderPresenter from './presenter/header-presenter.js';
+/* import HeaderPresenter from './presenter/header-presenter.js'; */
 
 const destinationsModel = new DestinationsModel();
 const offersModel = new OffersModel();
