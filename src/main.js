@@ -9,7 +9,18 @@ import PointInList from './view/point-in-list-view.js'; */
 import TripInfoMainView from './view/trip-info-header-view.js';
 import CostInfoMainView from './view/test_price-view.js';
 
+import DestinationsModel from './model/destination-model.js';
+import OffersModel from './model/offers-model.js';
+import PointsModel from './model/points-model.js';
+import HeaderPresenter from './presenter/header-presenter.js';
+
+const destinationsModel = new DestinationsModel();
+const offersModel = new OffersModel();
+const pointsModel = new PointsModel();
+
 const boardPresenter = new BoardPresenter();
+
+/* const headerPresenter = new HeaderPresenter(); */
 
 
 const siteHeadElement = document.querySelector('.page-header');
@@ -25,8 +36,10 @@ const siteMainInnerElement = siteMainElement.querySelector('.page-body__containe
 //синяя шапка
 render(new TripInfoMainView(), siteInnerHeadElement);
 render(new CostInfoMainView(), siteInnerHeadElement);
-render(new NewEventButtonView(), siteInnerElement);
+
+
 render(new FilterView(), siteDownElement);
+render(new NewEventButtonView(), siteInnerElement);
 
-
-boardPresenter.init(siteMainInnerElement);
+/* headerPresenter.init(siteInnerHeadElement, pointsModel); */
+boardPresenter.init(siteMainInnerElement, destinationsModel, offersModel, pointsModel);

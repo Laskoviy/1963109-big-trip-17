@@ -1,14 +1,10 @@
 import { createElement } from '../render.js';
 
-const createCostInfoMainTemplate = () => (
-  `  <p class="trip-info__cost">
-    Total: €&nbsp;<span class="trip-info__cost-value">1230</span>
-  </p>`
-);
+const createHeaderTemplate = () => '<section class="trip-main__trip-info  trip-info"></section>';
 
-export default class CostInfoMainView {
+export default class HeaderView {
   getTemplate() {
-    return createCostInfoMainTemplate();
+    return createHeaderTemplate();
   }
 
   getElement() {
