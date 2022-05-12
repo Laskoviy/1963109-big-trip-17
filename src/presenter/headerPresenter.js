@@ -1,6 +1,6 @@
 import { render } from '../render.js';
 
-import HeaderView from '../view/header-view.js';
+import HeaderView from '../view/headerView.js';
 import TripInfoMainView from '../view/trip-info-header-view.js';
 import CostInfoMainView from '../view/test_price-view.js';
 

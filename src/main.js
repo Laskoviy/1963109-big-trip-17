@@ -1,18 +1,17 @@
-import NewEventButtonView from './view/new-event-button-view.js';
-import FilterView from './view/filter-view.js';
+import NewEventButtonView from './view/newEventButtonView.js';
+import FilterView from './view/filterView.js';
 import { render } from './render.js';
 
-import BoardPresenter from './presenter/board-presenter.js';
+import BoardPresenter from './presenter/boardPresenter.js';
 
-/* import BoardView from './view/board-view.js';
-import PointInList from './view/point-in-list-view.js'; */
-import TripInfoMainView from './view/trip-info-header-view.js';
-import CostInfoMainView from './view/test_price-view.js';
 
-import DestinationsModel from './model/destination-model.js';
-import OffersModel from './model/offers-model.js';
-import PointsModel from './model/points-model.js';
-/* import HeaderPresenter from './presenter/header-presenter.js'; */
+import TripInfoMainView from './view/tripInfoMainView.js';
+import CostInfoMainView from './view/costInfoMainView.js';
+
+import DestinationsModel from './model/destinationModel.js';
+import OffersModel from './model/offersModel.js';
+import PointsModel from './model/pointsModel.js';
+/* import HeaderPresenter from './presenter/headerPresenter.js'; */
 
 const destinationsModel = new DestinationsModel();
 const offersModel = new OffersModel();

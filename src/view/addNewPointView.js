@@ -1,15 +1,13 @@
 import { createElement } from '../render.js';
 import { humanizeTaskDueDateT } from '../utils.js';
 
-/* ${destination.description}  */
+
 const createAddNewPointTemplate = (point) => {
   const { type, destination, offers, dateFrom, dateTo, basePrice } = point;
   const date1 = dateFrom !== null ? humanizeTaskDueDateT(dateFrom) : '';
   const date2 = dateTo !== null ? humanizeTaskDueDateT(dateTo) : '';
 
-  /* const pr = '';
-  const from = date1 + pr + time1;
-  const to = date2 + pr + time2; */
+
   return (
     `<form class="event event--edit" action="#" method="post">
   <header class="event__header">
@@ -142,7 +140,7 @@ const createAddNewPointTemplate = (point) => {
   );
 };
 
-export default class AddPoint {
+export default class AddNewPointView {
   constructor(point) {
     this.point = point;
   }

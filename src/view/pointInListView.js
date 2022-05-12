@@ -1,3 +1,4 @@
+import { THOUSAND } from '../const.js';
 import { createElement } from '../render.js';
 import { humanizeTaskDueDate, humanizeTaskDueTime } from '../utils.js';
 
@@ -18,9 +19,9 @@ const createPointInListTemplate = (point) => {
     const startDateS = new Date(0, 0, 0, start[0], start[1], 0);
     const endDateS = new Date(0, 0, 0, end[0], end[1], 0);
     let dif = endDateS.getTime() - startDateS.getTime();
-    let hours = Math.floor(dif / 1000 / 60 / 60);
-    dif -= hours * 1000 * 60 * 60;
-    const minutes = Math.floor(dif / 1000 / 60);
+    let hours = Math.floor(dif / THOUSAND / SIXTY / SIXTY);
+    dif -= hours * THOUSAND * SIXTY * SIXTY;
+    const minutes = Math.floor(dif / THOUSAND / SIXTY);
 
     // If using time pickers with 24 hours format, add the below line get exact hours
     if (hours < 0) { hours = hours + 24; }
@@ -72,7 +73,7 @@ const createPointInListTemplate = (point) => {
   );
 };
 
-export default class PointInList {
+export default class PointInListView {
   constructor(point) {
     this.point = point;
   }
