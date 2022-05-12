@@ -1,15 +1,25 @@
-import NewEventButtonView from './view/new-event-button-view.js';
-import FilterView from './view/filter-view.js';
+import NewEventButtonView from './view/newEventButtonView.js';
+import FilterView from './view/filterView.js';
 import { render } from './render.js';
 
-import BoardPresenter from './presenter/board-presenter.js';
+import BoardPresenter from './presenter/boardPresenter.js';
 
-/* import BoardView from './view/board-view.js';
-import PointInList from './view/point-in-list-view.js'; */
-import TripInfoMainView from './view/trip-info-header-view.js';
-import CostInfoMainView from './view/test_price-view.js';
+
+import TripInfoMainView from './view/tripInfoMainView.js';
+import CostInfoMainView from './view/costInfoMainView.js';
+
+import DestinationsModel from './model/destinationModel.js';
+import OffersModel from './model/offersModel.js';
+import PointsModel from './model/pointsModel.js';
+/* import HeaderPresenter from './presenter/headerPresenter.js'; */
+
+const destinationsModel = new DestinationsModel();
+const offersModel = new OffersModel();
+const pointsModel = new PointsModel();
 
 const boardPresenter = new BoardPresenter();
+
+/* const headerPresenter = new HeaderPresenter(); */
 
 
 const siteHeadElement = document.querySelector('.page-header');
@@ -25,8 +35,10 @@ const siteMainInnerElement = siteMainElement.querySelector('.page-body__containe
 //синяя шапка
 render(new TripInfoMainView(), siteInnerHeadElement);
 render(new CostInfoMainView(), siteInnerHeadElement);
-render(new NewEventButtonView(), siteInnerElement);
+
+
 render(new FilterView(), siteDownElement);
+render(new NewEventButtonView(), siteInnerElement);
 
-
-boardPresenter.init(siteMainInnerElement);
+/* headerPresenter.init(siteInnerHeadElement, pointsModel); */
+boardPresenter.init(siteMainInnerElement, destinationsModel, offersModel, pointsModel);
