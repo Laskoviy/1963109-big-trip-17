@@ -9,7 +9,7 @@ import AddNewPointView from '../view/addNewPointView.js';
 
 export default class BoardPresenter {
   boardComponent = new BoardView();
-  eventListComponent = new PointInList();
+  eventListComponent = new PointInListView();
 
   init = (boardContainer, destinationsModel, offersModel, pointsModel) => {
     this.boardContainer = boardContainer;

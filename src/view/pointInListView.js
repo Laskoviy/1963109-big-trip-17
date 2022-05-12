@@ -1,4 +1,4 @@
-import { THOUSAND } from '../const.js';
+import { SIXTY, THOUSAND } from '../const.js';
 import { createElement } from '../render.js';
 import { humanizeTaskDueDate, humanizeTaskDueTime } from '../utils.js';
 
