@@ -17,15 +17,31 @@ const generatePointType = () => {
 };
 
 export const generateDestination = () => ({
-  description: 'Chamonix, is a beautiful city, a true asian pearl, with crowded streets.',
-  name: 'Chamonix',
-  pictures: [
+  destinations: [
     {
-      src: 'http://picsum.photos/300/200?r=0.0762563005163317',
-      description: 'Chamonix parliament building'
+      id: 1,
+      description: 'Chamonix, is a beautiful city, a true asian pearl, with crowded streets.',
+      name: 'Chamonix',
+      pictures: [
+        {
+          src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+          description: 'Chamonix parliament building'
+        }
+      ]
+    }, {
+      id: 2,
+      description: 'Amsterdam, is a beautiful city...',
+      name: 'Amsterdam',
+      pictures: [
+        {
+          src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+          description: 'Amsterdam parliament building'
+        }
+      ]
     }
   ]
-});
+}
+);
 
 export const generateOffer = () => ({
   type: generateOfferType(),
@@ -59,7 +75,7 @@ export const generateLocalPoint = () => ({
   dateTo: '2019-07-11T11:22:13.375Z',
   destination: generateDestination(),
   isFavorite: false,
-  offers: '0', //?? generateOffer.offers.title
+  offers: generateOffer(), //?? generateOffer.offers.title
   type: generatePointType()
 });
 

@@ -74,7 +74,7 @@ const createAddNewPointTemplate = (point) => {
       <label class="event__label  event__type-output" for="event-destination-1">
       ${type}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination.name} list="destination-list-1">
+      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination.destinations[0].name} list="destination-list-1">
       <datalist id="destination-list-1">
         <option value="Amsterdam"></option>
         <option value="Geneva"></option>
@@ -127,11 +127,11 @@ const createAddNewPointTemplate = (point) => {
 
     <section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${destination.description}</p>
+      <p class="event__destination-description">${destination.destinations[0].description}</p>
 
       <div class="event__photos-container">
         <div class="event__photos-tape">
-          <img class="event__photo" src=${destination.pictures[0].src} alt="Event photo">
+          <img class="event__photo" src=${destination.destinations[0].pictures[0].src} alt="Event photo">
         </div>
       </div>
     </section>
