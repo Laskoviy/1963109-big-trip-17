@@ -20,7 +20,7 @@ export const generateDestination = () => ({
   destinations: [
     {
       id: 1,
-      description: 'Chamonix, is a beautiful city, a true asian pearl, with crowded streets.',
+      description: null,
       name: 'Chamonix',
       pictures: [
         {

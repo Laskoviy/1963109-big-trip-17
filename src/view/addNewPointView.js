@@ -7,6 +7,23 @@ const createAddNewPointTemplate = (point) => {
   const date1 = dateFrom !== null ? humanizeTaskDueDateT(dateFrom) : '';
   const date2 = dateTo !== null ? humanizeTaskDueDateT(dateTo) : '';
 
+  /* //отрисовка
+  const pointTypeOffeR = offers
+    .find((offer) => offer.type === point.type);
+
+  pointTypeOfferR.offers
+    .map((offer) => '<input type= "checkbox"/>');
+
+  //отрисовать и отметить
+  const pointTypeOffer = offers
+    .find((offer) => offer.type === point.type);
+
+  pointTypeOffer.offers
+    .map((offer) => {
+      const checked = point.offers.includes(offer.id) ? 'checked' : '';
+
+      return `<input type= "checkbox" ${checked} />`;
+    }); */
 
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -123,6 +140,7 @@ const createAddNewPointTemplate = (point) => {
             <span class="event__offer-price">${offers.offers[1].price}</span>
           </label>
         </div>
+      </div>
     </section>
 
     <section class="event__section  event__section--destination">

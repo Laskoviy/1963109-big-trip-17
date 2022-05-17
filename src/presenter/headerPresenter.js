@@ -1,8 +1,10 @@
 import { render } from '../render.js';
+import CostInfoMainView from '../view/costInfoMainView.js';
 
 import HeaderView from '../view/headerView.js';
-import TripInfoMainView from '../view/trip-info-header-view.js';
-import CostInfoMainView from '../view/test_price-view.js';
+
+
+import TripInfoMainView from '../view/tripInfoMainView.js';
 
 export default class HeaderPresenter {
   headerComponent = new HeaderView();
@@ -17,11 +19,12 @@ export default class HeaderPresenter {
 
     render(this.headerComponent, this.headerContainer);
     for (let i = 0; i < 1; i++) {
-      render(new TripInfoMainView(this.boardPoints[i]), this.headerComponent.getElement());
+      render(new TripInfoMainView (this.boardPoints[i]), this.headerComponent.getElement());
     }
     for (let i = 0; i < 1; i++) {
       render(new CostInfoMainView(this.boardPoints[i]), this.headerComponent.getElement());
     }
+
 
   };
 }
