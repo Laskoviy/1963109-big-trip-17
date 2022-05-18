@@ -8,13 +8,11 @@ import BoardPresenter from './presenter/boardPresenter.js';
 /* import TripInfoMainView from './view/tripInfoMainView.js';
 import CostInfoMainView from './view/costInfoMainView.js'; */
 
-import DestinationsModel from './model/destinationModel.js';
-import OffersModel from './model/offersModel.js';
+
 import PointsModel from './model/pointsModel.js';
 import HeaderPresenter from './presenter/headerPresenter.js';
 
-const destinationsModel = new DestinationsModel();
-const offersModel = new OffersModel();
+
 const pointsModel = new PointsModel();
 
 const headerPresenter = new HeaderPresenter();
@@ -40,5 +38,5 @@ render(new FilterView(), siteConrtrols);
 render(new NewEventButtonView(), siteInnerElement);
 
 
-boardPresenter.init(siteMainInnerElement, destinationsModel, offersModel, pointsModel);
+boardPresenter.init(siteMainInnerElement, pointsModel);
 
