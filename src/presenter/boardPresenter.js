@@ -3,6 +3,7 @@ import { render } from '../render.js';
 import BoardView from '../view/boardView.js';
 import SortView from '../view/sortView.js';
 import PointInListView from '../view/pointInListView.js';
+import TripEventsListView from '../view/tripEventsListView.js';
 /* import AddNewPointView from '../view/addNewPointView.js'; */
 import EditPoint from '../view/editPointView.js';
 export default class BoardPresenter {
@@ -13,7 +14,7 @@ export default class BoardPresenter {
   #pointsModel = null;
 
   #boardComponent = new BoardView();
-  #pointListComponent = new PointInListView(); //#eventListComponent ?
+  #pointListComponent = new TripEventsListView(); //#eventListComponent ?
 
   #boardPoints = [];
 
@@ -25,15 +26,37 @@ export default class BoardPresenter {
 
     render(this.#boardComponent, this.#boardContainer);
     render(new SortView(), this.#boardComponent.element);
-    for (let i = 0; i < 1; i++) {
-      /* render(new AddNewPointView(this.boardPoints[i]), this.boardContainer); */ ////может быть ошибка this.boardDestinations[i] / this.boardComponent.getElement()
+    render(this.#pointListComponent, this.#boardComponent.element);
+    /*  for (let i = 0; i < 1; i++) {
       render(new EditPoint(this.#boardPoints[i]), this.#boardContainer);
-    }
-    /* render(new EditPoint(), this.boardComponent.getElement()); //может быть ошибка */
+    } */
 
+    /* render(new AddNewPointView(this.#boardPoints[i]), this.#boardContainer);  ////может быть ошибка  this.#boardComponent.element */
     for (let i = 0; i < this.#boardPoints.length; i++) {
-      render(new PointInListView(this.#boardPoints[i]), this.#boardContainer); //может быть ошибка this.eventListComponent.getElement
+      this.#renderPoint(this.#boardPoints[i]);
     }
+  };
 
+  #renderPoint = (point) => {
+    const pointComponent = new PointInListView(point);
+    const pointEditComponent = new EditPoint(point);
+
+    const replacePointToForm = () => {
+      this.#pointListComponent.element.replaceChild(pointEditComponent.element, pointComponent.element);
+    };
+
+    const replaceFormToPoint = () => {
+      this.#pointListComponent.element.replaceChild(pointComponent.element, pointEditComponent.element);
+    };
+
+    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+      replacePointToForm();
+    });
+
+    pointEditComponent.element.querySelector('.event__rollup-btn').addEventListener('submit', (evt) => { //заменил submit на click так как не работает отвена дефолтного события! а
+      evt.preventDefault();
+      replaceFormToPoint();
+    });
+    render(pointComponent, this.#pointListComponent.element);
   };
 }

@@ -38,7 +38,8 @@ const createPointInListTemplate = (point) => {
   const eventDate = humanizeTaskDueDate(dateFrom);
 
   return (
-    `<div class="event">
+    `<li class="trip-events__item">
+    <div class="event">
             <time class="event__date" datetime="2019-03-18">${eventDate}</time>
             <div class="event__type">
               <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
@@ -73,29 +74,33 @@ const createPointInListTemplate = (point) => {
             <button class="event__rollup-btn" type="button">
               <span class="visually-hidden">Open event</span>
             </button>
-          </div>`
+          </div>
+          </li>`
   );
 };
 
 export default class PointInListView {
+  #element = null;
+  #point = null;
+
   constructor(point) {
-    this.point = point;
+    this.#point = point;
   }
 
-  getTemplate() {
-    return createPointInListTemplate(this.point);
+  get template() {
+    return createPointInListTemplate(this.#point);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
 

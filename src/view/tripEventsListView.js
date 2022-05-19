@@ -1,15 +1,12 @@
 import { createElement } from '../render.js';
 
-const createCostInfoMainTemplate = () => (
-  `  <p class="trip-info__cost">
-    Total: €&nbsp;<span class="trip-info__cost-value">1230</span>
-  </p>`
-);
+const createTripEventsListViewTemplate = () => '<ul class="trip-events__list"></ul>';
 
-export default class CostInfoMainView {
+export default class TripEventsListView {
   #element = null;
+
   get template() {
-    return createCostInfoMainTemplate();
+    return createTripEventsListViewTemplate();
   }
 
   get element() {
