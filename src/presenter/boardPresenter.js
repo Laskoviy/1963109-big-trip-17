@@ -49,13 +49,23 @@ export default class BoardPresenter {
       this.#pointListComponent.element.replaceChild(pointComponent.element, pointEditComponent.element);
     };
 
+    const onEscKeyDown = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        replaceFormToPoint();
+        document.removeEventListener('keydown', onEscKeyDown);
+      }
+    };
+
     pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
       replacePointToForm();
+      document.addEventListener('keydown', onEscKeyDown);
     });
 
-    pointEditComponent.element.querySelector('.event__rollup-btn').addEventListener('submit', (evt) => { //заменил submit на click так как не работает отвена дефолтного события! а
+    pointEditComponent.element.querySelector('.event__save-btn').addEventListener('click', (evt) => { //заменил submit на click так как не работает отвена дефолтного события! а
       evt.preventDefault();
       replaceFormToPoint();
+      document.removeEventListener('keydown', onEscKeyDown);
     });
     render(pointComponent, this.#pointListComponent.element);
   };
