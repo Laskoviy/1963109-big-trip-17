@@ -1,27 +1,32 @@
 import { render } from '../render.js';
+import CostInfoMainView from '../view/costInfoMainView.js';
 
 import HeaderView from '../view/headerView.js';
-import TripInfoMainView from '../view/trip-info-header-view.js';
-import CostInfoMainView from '../view/test_price-view.js';
+
+
+import TripInfoMainView from '../view/tripInfoMainView.js';
 
 export default class HeaderPresenter {
-  headerComponent = new HeaderView();
+  #headerContainer = null;
+  #pointsModel = null;
 
+  #headerComponent = new HeaderView();
+
+  #boardPoints = [];
 
   init = (headerContainer, pointsModel) => {
-    this.headerContainer = headerContainer;
+    this.#headerContainer = headerContainer;
+    this.#pointsModel = pointsModel;
+    this.#boardPoints = [...this.#pointsModel.points];
 
-    this.pointsModel = pointsModel;
-    this.boardPoints = [...this.pointsModel.getPoints()];
-
-
-    render(this.headerComponent, this.headerContainer);
+    render(this.#headerComponent, this.#headerContainer);
     for (let i = 0; i < 1; i++) {
-      render(new TripInfoMainView(this.boardPoints[i]), this.headerComponent.getElement());
+      render(new TripInfoMainView (this.#boardPoints[i]), this.#headerComponent.element);
     }
     for (let i = 0; i < 1; i++) {
-      render(new CostInfoMainView(this.boardPoints[i]), this.headerComponent.getElement());
+      render(new CostInfoMainView(this.#boardPoints[i]), this.#headerComponent.element);
     }
+
 
   };
 }

@@ -7,6 +7,23 @@ const createAddNewPointTemplate = (point) => {
   const date1 = dateFrom !== null ? humanizeTaskDueDateT(dateFrom) : '';
   const date2 = dateTo !== null ? humanizeTaskDueDateT(dateTo) : '';
 
+  /* //отрисовка
+  const pointTypeOffeR = offers
+    .find((offer) => offer.type === point.type);
+
+  pointTypeOfferR.offers
+    .map((offer) => '<input type= "checkbox"/>');
+
+  //отрисовать и отметить
+  const pointTypeOffer = offers
+    .find((offer) => offer.type === point.type);
+
+  pointTypeOffer.offers
+    .map((offer) => {
+      const checked = point.offers.includes(offer.id) ? 'checked' : '';
+
+      return `<input type= "checkbox" ${checked} />`;
+    }); */
 
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -74,7 +91,7 @@ const createAddNewPointTemplate = (point) => {
       <label class="event__label  event__type-output" for="event-destination-1">
       ${type}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination.name} list="destination-list-1">
+      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination.destinations[0].name} list="destination-list-1">
       <datalist id="destination-list-1">
         <option value="Amsterdam"></option>
         <option value="Geneva"></option>
@@ -123,15 +140,16 @@ const createAddNewPointTemplate = (point) => {
             <span class="event__offer-price">${offers.offers[1].price}</span>
           </label>
         </div>
+      </div>
     </section>
 
     <section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${destination.description}</p>
+      <p class="event__destination-description">${destination.destinations[0].description}</p>
 
       <div class="event__photos-container">
         <div class="event__photos-tape">
-          <img class="event__photo" src=${destination.pictures[0].src} alt="Event photo">
+          <img class="event__photo" src=${destination.destinations[0].pictures[0].src} alt="Event photo">
         </div>
       </div>
     </section>
@@ -141,23 +159,26 @@ const createAddNewPointTemplate = (point) => {
 };
 
 export default class AddNewPointView {
+  #element = null;
+  #point = null;
+
   constructor(point) {
-    this.point = point;
+    this.#point = point;
   }
 
-  getTemplate() {
-    return createAddNewPointTemplate(this.point);
+  get template() {
+    return createAddNewPointTemplate(this.#point);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

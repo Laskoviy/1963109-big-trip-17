@@ -3,19 +3,21 @@ import { createElement } from '../render.js';
 const createHeaderTemplate = () => '<section class="trip-main__trip-info  trip-info"></section>';
 
 export default class HeaderView {
-  getTemplate() {
+  #element = null;
+
+  get template() {
     return createHeaderTemplate();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

@@ -1,12 +1,16 @@
 import { SIXTY, THOUSAND } from '../const.js';
 import { createElement } from '../render.js';
-import { humanizeTaskDueDate, humanizeTaskDueTime } from '../utils.js';
+import { getRandomInteger, humanizeTaskDueDate, humanizeTaskDueTime } from '../utils.js';
 
 const createPointInListTemplate = (point) => {
   const { type, destination, dateFrom, dateTo, basePrice, offers, isFavorite } = point;
 
   const date1 = dateFrom !== null ? humanizeTaskDueTime(dateFrom) : '';
   const date2 = dateTo !== null ? humanizeTaskDueTime(dateTo) : '';
+
+  //генерация рандомного места
+  const randomIndex = getRandomInteger(0, destination.destinations.length - 1);
+  const dest = destination.destinations[randomIndex];
 
   //функция по вычитанию времени взял из интернета
 
@@ -34,12 +38,13 @@ const createPointInListTemplate = (point) => {
   const eventDate = humanizeTaskDueDate(dateFrom);
 
   return (
-    `<div class="event">
+    `<li class="trip-events__item">
+    <div class="event">
             <time class="event__date" datetime="2019-03-18">${eventDate}</time>
             <div class="event__type">
               <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
             </div>
-            <h3 class="event__title">${type} ${destination.name}</h3>
+            <h3 class="event__title">${type} ${dest.name}</h3>
             <div class="event__schedule">
               <p class="event__time">
                 <time class="event__start-time" datetime="2019-03-18T10:30">${date1}</time>
@@ -69,29 +74,33 @@ const createPointInListTemplate = (point) => {
             <button class="event__rollup-btn" type="button">
               <span class="visually-hidden">Open event</span>
             </button>
-          </div>`
+          </div>
+          </li>`
   );
 };
 
 export default class PointInListView {
+  #element = null;
+  #point = null;
+
   constructor(point) {
-    this.point = point;
+    this.#point = point;
   }
 
-  getTemplate() {
-    return createPointInListTemplate(this.point);
+  get template() {
+    return createPointInListTemplate(this.#point);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
 
