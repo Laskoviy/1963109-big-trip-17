@@ -65,7 +65,7 @@ export const generatePoint = () => ({
   destination: generateDestination(),
   id: '0',
   isFavorite: false,
-  offers: generateOffer(), //?? generateOffer.offers.title
+  offers: generateOffer(),
   type: generatePointType()
 });
 
@@ -75,7 +75,7 @@ export const generateLocalPoint = () => ({
   dateTo: '2019-07-11T11:22:13.375Z',
   destination: generateDestination(),
   isFavorite: false,
-  offers: generateOffer(), //?? generateOffer.offers.title
+  offers: generateOffer(),
   type: generatePointType()
 });
 

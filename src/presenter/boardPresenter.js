@@ -4,37 +4,38 @@ import BoardView from '../view/boardView.js';
 import SortView from '../view/sortView.js';
 import PointInListView from '../view/pointInListView.js';
 import TripEventsListView from '../view/tripEventsListView.js';
+
 /* import AddNewPointView from '../view/addNewPointView.js'; */
 import EditPoint from '../view/editPointView.js';
+import NoPointsView from '../view/noPointsView.js';
 export default class BoardPresenter {
-  /* boardComponent = new BoardView();
-  eventListComponent = new PointInListView(); */
 
   #boardContainer = null;
   #pointsModel = null;
 
   #boardComponent = new BoardView();
-  #pointListComponent = new TripEventsListView(); //#eventListComponent ?
+  #pointListComponent = new TripEventsListView();
 
   #boardPoints = [];
 
   init = (boardContainer, pointsModel) => {
-
     this.#boardContainer = boardContainer;
     this.#pointsModel = pointsModel;
     this.#boardPoints = [...this.#pointsModel.points];
 
     render(this.#boardComponent, this.#boardContainer);
-    render(new SortView(), this.#boardComponent.element);
-    render(this.#pointListComponent, this.#boardComponent.element);
-    /*  for (let i = 0; i < 1; i++) {
-      render(new EditPoint(this.#boardPoints[i]), this.#boardContainer);
-    } */
 
-    /* render(new AddNewPointView(this.#boardPoints[i]), this.#boardContainer);  ////может быть ошибка  this.#boardComponent.element */
-    for (let i = 0; i < this.#boardPoints.length; i++) {
-      this.#renderPoint(this.#boardPoints[i]);
+    if (this.#boardPoints.every((point) => point.isArchive)) {
+      render(new NoPointsView(), this.#boardComponent.element);
+    } else {
+      render(new SortView(), this.#boardComponent.element);
+      render(this.#pointListComponent, this.#boardComponent.element);
+      for (let i = 0; i < this.#boardPoints.length; i++) {
+        this.#renderPoint(this.#boardPoints[i]);
+      }
     }
+    /* render(new AddNewPointView(this.#boardPoints[i]), this.#boardContainer);  ////может быть ошибка  this.#boardComponent.element */
+
   };
 
   #renderPoint = (point) => {
