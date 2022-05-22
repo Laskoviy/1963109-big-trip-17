@@ -15,9 +15,6 @@ import HeaderPresenter from './presenter/headerPresenter.js';
 
 const pointsModel = new PointsModel();
 
-const headerPresenter = new HeaderPresenter();
-const boardPresenter = new BoardPresenter();
-
 const siteHeadElement = document.querySelector('.page-header');
 const siteHeadInnerElement = siteHeadElement.querySelector('.page-body__container');
 const siteInnerElement = siteHeadInnerElement.querySelector('.trip-main');
@@ -28,15 +25,14 @@ const siteConrtrols = siteDownElement.querySelector('.trip-controls__filters');
 const siteMainElement = document.querySelector('.page-body__page-main');
 const siteMainInnerElement = siteMainElement.querySelector('.page-body__container');
 
-//синяя шапка
-/* render(new TripInfoMainView(), siteInnerHeadElement);
-render(new CostInfoMainView(), siteInnerHeadElement); */
+const headerPresenter = new HeaderPresenter(siteTripMainTripInfo, pointsModel);
+const boardPresenter = new BoardPresenter(siteMainInnerElement, pointsModel);
 
-headerPresenter.init(siteTripMainTripInfo, pointsModel);
+
+headerPresenter.init();
 
 render(new FilterView(), siteConrtrols);
 render(new NewEventButtonView(), siteInnerElement);
 
-
-boardPresenter.init(siteMainInnerElement, pointsModel);
+boardPresenter.init();
 

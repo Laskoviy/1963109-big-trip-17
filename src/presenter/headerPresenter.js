@@ -14,19 +14,23 @@ export default class HeaderPresenter {
 
   #boardPoints = [];
 
-  init = (headerContainer, pointsModel) => {
+  constructor(headerContainer, pointsModel) {
     this.#headerContainer = headerContainer;
     this.#pointsModel = pointsModel;
-    this.#boardPoints = [...this.#pointsModel.points];
+  }
 
+  init = () => {
+    this.#boardPoints = [...this.#pointsModel.points];
+    this.#renderBoard();
+  };
+
+  #renderBoard = () => {
     render(this.#headerComponent, this.#headerContainer);
     for (let i = 0; i < 1; i++) {
-      render(new TripInfoMainView (this.#boardPoints[i]), this.#headerComponent.element);
+      render(new TripInfoMainView(this.#boardPoints[i]), this.#headerComponent.element);
     }
     for (let i = 0; i < 1; i++) {
       render(new CostInfoMainView(this.#boardPoints[i]), this.#headerComponent.element);
     }
-
-
   };
 }
