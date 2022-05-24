@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Максим Жиделёв](https://up.htmlacademy.ru/ecmascript/17/user/1963109).
-* Наставник: [Дмитрий Железцов](https://htmlacademy.ru/profile/sench).
+* Наставник: [Светлана Березюк](https://htmlacademy.ru/profile/id1432187).
 
 ---
 
