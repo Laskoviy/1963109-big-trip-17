@@ -52,8 +52,8 @@ export default class BoardPresenter {
       document.addEventListener('keydown', onEscKeyDown);
     });
 
-    pointEditComponent.element.querySelector('.event__save-btn').addEventListener('click', (evt) => { //заменил submit на click так как не работает отвена дефолтного события! а
-      evt.preventDefault();//не работает
+    pointEditComponent.element.addEventListener('submit', (evt) => {
+      evt.preventDefault();
       replaceFormToPoint();
       document.removeEventListener('keydown', onEscKeyDown);
     });
