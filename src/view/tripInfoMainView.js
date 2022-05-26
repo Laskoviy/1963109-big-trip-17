@@ -1,5 +1,4 @@
-import { createElement } from '../render.js';
-
+import AbstractView from '../framework/view/abstract-view.js';
 
 const createTripInfoMainTemplate = (point) => {
   const { destination } = point;
@@ -15,11 +14,11 @@ const createTripInfoMainTemplate = (point) => {
   );
 };
 
-export default class TripInfoMainView {
-  #element = null;
+export default class TripInfoMainView extends AbstractView{
   #point = null;
 
   constructor(point) {
+    super();
     this.#point = point;
   }
 
@@ -29,17 +28,6 @@ export default class TripInfoMainView {
     } else {
       return '<div></div>';
     }
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
 

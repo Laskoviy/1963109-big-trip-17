@@ -1,6 +1,7 @@
 import { SIXTY, THOUSAND } from '../const.js';
-import { createElement } from '../render.js';
-import { getRandomInteger, humanizeTaskDueDate, humanizeTaskDueTime } from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import { getRandomInteger} from '../utils/common.js';
+import { humanizeTaskDueDate, humanizeTaskDueTime } from '../utils/event.js';
 
 const createPointInListTemplate = (point) => {
   const { type, destination, dateFrom, dateTo, basePrice, offers, isFavorite } = point;
@@ -79,11 +80,11 @@ const createPointInListTemplate = (point) => {
   );
 };
 
-export default class PointInListView {
-  #element = null;
+export default class PointInListView extends AbstractView{
   #point = null;
 
   constructor(point) {
+    super();
     this.#point = point;
   }
 
@@ -91,16 +92,14 @@ export default class PointInListView {
     return createPointInListTemplate(this.#point);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setEditClickHandler = (callback) => {
+    this._callback.editClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+  };
 
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.editClick();
+  };
 }
 

@@ -1,5 +1,5 @@
-import { createElement } from '../render.js';
-import { humanizeTaskDueDateT } from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import { humanizeTaskDueDateT } from '../utils/event.js';
 
 const createEditPointTemplate = (point) => {
   const { type, destination, offers, dateFrom, dateTo, basePrice } = point;
@@ -161,11 +161,11 @@ const createEditPointTemplate = (point) => {
 </form>`
   );
 };
-export default class EditPoint {
-  #element = null;
+export default class EditPoint extends AbstractView{
   #point = null;
 
   constructor(point) {
+    super();
     this.#point = point;
   }
 
@@ -173,15 +173,13 @@ export default class EditPoint {
     return createEditPointTemplate(this.#point);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.addEventListener('submit', this.#formSubmitHandler);
+  };
 
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  };
 }

@@ -1,11 +1,7 @@
-import { render } from '../render.js';
+import {render} from '../framework/render.js';
 import CostInfoMainView from '../view/costInfoMainView.js';
-
 import HeaderView from '../view/headerView.js';
-
-
 import TripInfoMainView from '../view/tripInfoMainView.js';
-
 export default class HeaderPresenter {
   #headerContainer = null;
   #pointsModel = null;
