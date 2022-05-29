@@ -1,11 +1,11 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeTaskDueDateT } from '../utils/event.js';
+import { humanizePointDueDateTime } from '../utils/event.js';
 
 const createEditPointTemplate = (point) => {
   const { type, destination, offers, dateFrom, dateTo, basePrice } = point;
   //чтобы шаблон корректно отображался с «пустыми» данными.
-  const date1 = dateFrom !== null ? humanizeTaskDueDateT(dateFrom) : '';
-  const date2 = dateTo !== null ? humanizeTaskDueDateT(dateTo) : '';
+  const date1 = dateFrom !== null ? humanizePointDueDateTime(dateFrom) : '';
+  const date2 = dateTo !== null ? humanizePointDueDateTime(dateTo) : '';
   const dest = destination.destinations[0].description !== null ? destination.destinations[0].description : '';
   const destname = destination.destinations[0].name !== null ? destination.destinations[0].name : '';
   const offtitle1 = offers.offers[0].title !== null ? offers.offers[0].title : '';
@@ -161,7 +161,7 @@ const createEditPointTemplate = (point) => {
 </form>`
   );
 };
-export default class EditPoint extends AbstractView{
+export default class EditPoint extends AbstractView {
   #point = null;
 
   constructor(point) {

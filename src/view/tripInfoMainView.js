@@ -14,7 +14,7 @@ const createTripInfoMainTemplate = (point) => {
   );
 };
 
-export default class TripInfoMainView extends AbstractView{
+export default class TripInfoMainView extends AbstractView {
   #point = null;
 
   constructor(point) {
