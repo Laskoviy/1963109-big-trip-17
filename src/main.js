@@ -1,17 +1,11 @@
 import NewEventButtonView from './view/newEventButtonView.js';
 import FilterView from './view/filterView.js';
-
-import {render} from './framework/render.js';
-
+import { render } from './framework/render.js';
 import BoardPresenter from './presenter/boardPresenter.js';
-
-
-/* import TripInfoMainView from './view/tripInfoMainView.js';
-import CostInfoMainView from './view/costInfoMainView.js'; */
-
 
 import PointsModel from './model/pointsModel.js';
 import HeaderPresenter from './presenter/headerPresenter.js';
+import { generateFilter } from './mock/filter.js';
 
 
 const pointsModel = new PointsModel();
@@ -29,10 +23,11 @@ const siteMainInnerElement = siteMainElement.querySelector('.page-body__containe
 const headerPresenter = new HeaderPresenter(siteTripMainTripInfo, pointsModel);
 const boardPresenter = new BoardPresenter(siteMainInnerElement, pointsModel);
 
+const filters = generateFilter(pointsModel.points);
 
 headerPresenter.init();
 
-render(new FilterView(), siteControls);
+render(new FilterView(filters), siteControls);
 render(new NewEventButtonView(), siteInnerElement);
 
 boardPresenter.init();
