@@ -19,6 +19,10 @@ export default class CostInfoMainView extends AbstractView {
   }
 
   get template() {
-    return createCostInfoMainTemplate(this.#point);
+    if (this.#point) {
+      return createCostInfoMainTemplate(this.#point);
+    } else {
+      return '<div></div>';
+    }
   }
 }

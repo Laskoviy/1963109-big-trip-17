@@ -9,26 +9,25 @@ import { generateFilter } from './mock/filter.js';
 
 
 const pointsModel = new PointsModel();
+const filters = generateFilter(pointsModel.points);
 
-const siteHeadElement = document.querySelector('.page-header');
-const siteHeadInnerElement = siteHeadElement.querySelector('.page-body__container');
-const siteInnerElement = siteHeadInnerElement.querySelector('.trip-main');
-const siteTripMainTripInfo = siteInnerElement.querySelector('.trip-main__trip-info');
-const siteDownElement = siteInnerElement.querySelector('.trip-main__trip-controls');
+const sitePageHeaderElement = document.querySelector('.page-header');
+const sitePageHeaderContainerElement = sitePageHeaderElement.querySelector('.page-header__container');
+const siteTripMainElement = sitePageHeaderContainerElement.querySelector('.trip-main');
+export const siteTripMainTripInfoElement = siteTripMainElement.querySelector('.trip-main__trip-info');
+const siteDownElement = siteTripMainElement.querySelector('.trip-main__trip-controls');
 const siteControls = siteDownElement.querySelector('.trip-controls__filters');
 
 const siteMainElement = document.querySelector('.page-body__page-main');
 const siteMainInnerElement = siteMainElement.querySelector('.page-body__container');
 
-const headerPresenter = new HeaderPresenter(siteTripMainTripInfo, pointsModel);
+const headerPresenter = new HeaderPresenter(siteTripMainTripInfoElement, pointsModel);
 const boardPresenter = new BoardPresenter(siteMainInnerElement, pointsModel);
-
-const filters = generateFilter(pointsModel.points);
 
 headerPresenter.init();
 
 render(new FilterView(filters), siteControls);
-render(new NewEventButtonView(), siteInnerElement);
+render(new NewEventButtonView(), siteTripMainElement);
 
 boardPresenter.init();
 

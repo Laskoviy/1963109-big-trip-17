@@ -1,15 +1,17 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import { humanizePointDueDate } from '../utils/event.js';
 
 const createTripInfoMainTemplate = (point) => {
-  const { destination } = point;
+  const { destination, dateFrom } = point;
   const destname1 = destination.destinations[0].name !== null ? destination.destinations[0].name : '';
   const destname2 = destination.destinations[1].name !== null ? destination.destinations[1].name : '';
+  const eventDate = humanizePointDueDate(dateFrom);
 
   return (
     `<div class="trip-info__main">
   <h1 class="trip-info__title">${destname1} — ${destname2}</h1>
 
-  <p class="trip-info__dates">Mar 18&nbsp;—&nbsp;20</p>
+  <p class="trip-info__dates">${eventDate}&nbsp;—&nbsp;20</p>
 </div>`
   );
 };
