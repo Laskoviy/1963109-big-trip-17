@@ -1,10 +1,10 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeTaskDueDateT } from '../utils/event.js';
+import { humanizePointDueDateTime } from '../utils/event.js';
 
 const createAddNewPointTemplate = (point) => {
   const { type, destination, offers, dateFrom, dateTo, basePrice } = point;
-  const date1 = dateFrom !== null ? humanizeTaskDueDateT(dateFrom) : '';
-  const date2 = dateTo !== null ? humanizeTaskDueDateT(dateTo) : '';
+  const date1 = dateFrom !== null ? humanizePointDueDateTime(dateFrom) : '';
+  const date2 = dateTo !== null ? humanizePointDueDateTime(dateTo) : '';
 
   /* //отрисовка
   const pointTypeOffeR = offers
@@ -157,7 +157,7 @@ const createAddNewPointTemplate = (point) => {
   );
 };
 
-export default class AddNewPointView extends AbstractView{
+export default class AddNewPointView extends AbstractView {
   #point = null;
 
   constructor(point) {

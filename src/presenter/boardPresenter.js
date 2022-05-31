@@ -1,4 +1,4 @@
-import {render, replace} from '../framework/render.js';
+import { render, replace } from '../framework/render.js';
 import BoardView from '../view/boardView.js';
 import SortView from '../view/sortView.js';
 import PointInListView from '../view/pointInListView.js';

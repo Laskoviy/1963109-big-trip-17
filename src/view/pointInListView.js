@@ -1,13 +1,13 @@
 import { SIXTY, THOUSAND } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
-import { getRandomInteger} from '../utils/common.js';
-import { humanizeTaskDueDate, humanizeTaskDueTime } from '../utils/event.js';
+import { getRandomInteger } from '../utils/common.js';
+import { humanizePointDueDate, humanizePointDueTime } from '../utils/event.js';
 
 const createPointInListTemplate = (point) => {
   const { type, destination, dateFrom, dateTo, basePrice, offers, isFavorite } = point;
 
-  const date1 = dateFrom !== null ? humanizeTaskDueTime(dateFrom) : '';
-  const date2 = dateTo !== null ? humanizeTaskDueTime(dateTo) : '';
+  const date1 = dateFrom !== null ? humanizePointDueTime(dateFrom) : '';
+  const date2 = dateTo !== null ? humanizePointDueTime(dateTo) : '';
 
   //генерация рандомного места
   const randomIndex = getRandomInteger(0, destination.destinations.length - 1);
@@ -15,8 +15,8 @@ const createPointInListTemplate = (point) => {
 
   //функция по вычитанию времени взял из интернета
 
-  const startDate = humanizeTaskDueTime(dateFrom);
-  const endDate = humanizeTaskDueTime(dateTo);
+  const startDate = humanizePointDueTime(dateFrom);
+  const endDate = humanizePointDueTime(dateTo);
 
   const timeDiff = (start, end) => {
     start = start.split(':');
@@ -36,7 +36,7 @@ const createPointInListTemplate = (point) => {
   };
 
   const duration = timeDiff(startDate, endDate);
-  const eventDate = humanizeTaskDueDate(dateFrom);
+  const eventDate = humanizePointDueDate(dateFrom);
 
   return (
     `<li class="trip-events__item">
@@ -80,7 +80,7 @@ const createPointInListTemplate = (point) => {
   );
 };
 
-export default class PointInListView extends AbstractView{
+export default class PointInListView extends AbstractView {
   #point = null;
 
   constructor(point) {
