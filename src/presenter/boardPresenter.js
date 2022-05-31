@@ -1,4 +1,4 @@
-import { render, replace } from '../framework/render.js';
+import { render, RenderPosition, replace } from '../framework/render.js';
 import BoardView from '../view/boardView.js';
 import SortView from '../view/sortView.js';
 import PointInListView from '../view/pointInListView.js';
@@ -13,6 +13,8 @@ export default class BoardPresenter {
 
   #boardComponent = new BoardView();
   #pointListComponent = new TripListView();
+  #sortComponent = new SortView();
+  #noPointComponent = new NoPointsView();
 
   #boardPoints = [];
 
@@ -26,6 +28,12 @@ export default class BoardPresenter {
     this.#renderBoard();
   };
 
+  //метод для сортировки
+  #renderSort = () => {
+    render(this.#sortComponent, this.#boardComponent.element, RenderPosition.AFTERBEGIN);
+  };
+
+  //метод для отрисовки точки
   #renderPoint = (point) => {
     const pointComponent = new PointInListView(point);
     const pointEditComponent = new EditPoint(point);
@@ -58,20 +66,34 @@ export default class BoardPresenter {
     render(pointComponent, this.#pointListComponent.element);
   };
 
-  #renderBoard = () => {
-    render(this.#boardComponent, this.#boardContainer);
+  /* #renderPoints = (from, to) => {
+    this.#boardPoints
+      .slice(from, to)
+      .forEach((point) => this.#renderPoint(point));
+  }; */
 
-    if (this.#boardPoints.every((point) => point.isArchive)) {
-      render(new NoPointsView(), this.#boardComponent.element);
-      return;
-    }
-    render(new SortView(), this.#boardComponent.element);
+  //метод для отрисовки пустого поля
+  #renderNoPoints = () => {
+    render(this.#noPointComponent, this.#boardComponent.element, RenderPosition.AFTERBEGIN);
+  };
+
+  //метод для отрисовки списка с точками
+  #renderPointList = () => {
     render(this.#pointListComponent, this.#boardComponent.element);
-
     for (let i = 0; i < this.#boardPoints.length; i++) {
       this.#renderPoint(this.#boardPoints[i]);
     }
     /* render(new AddNewPointView(this.#boardPoints[i]), this.#boardContainer);  */
   };
 
+  //метод для отрисовки доски
+  #renderBoard = () => {
+    render(this.#boardComponent, this.#boardContainer);
+    if (this.#boardPoints.every((point) => point.isArchive)) {//изменить на количество точек <1
+      this.#renderNoPoints();
+      return;
+    }
+    this.#renderSort();
+    this.#renderPointList();
+  };
 }
