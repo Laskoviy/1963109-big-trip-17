@@ -12,5 +12,19 @@ const getRandomItem = (arr) => {
 
   return arr[randomIndex];
 };
+//вспомогательная функция по обновлению элемента
+const updateItem = (items, update) => {
+  const index = items.findIndex((item) => item.id === update.id);
 
-export { getRandomInteger, getRandomItem };
+  if (index === -1) {
+    return items;
+  }
+
+  return [
+    ...items.slice(0, index),
+    update,
+    ...items.slice(index + 1),
+  ];
+};
+
+export { getRandomInteger, getRandomItem, updateItem };
