@@ -2,19 +2,27 @@ import { remove, render, replace } from '../framework/render';
 import EditPoint from '../view/editPointView';
 import PointInListView from '../view/pointInListView';
 
+//варианты в которых может находиться точка маршрута
+const Mode = {
+  DEFAULT: 'DEFAULT', //обычный
+  EDITING: 'EDITING', //редактирование
+};
 export default class PointPresenter {
 
   #pointListContainer = null;
   #changeData = null;
+  #changeMode = null;
 
   #pointComponent = null;
   #pointEditComponent = null;
 
   #point = null;
+  #mode = Mode.DEFAULT; //по умолчанию точка будет в обычном режиме
 
-  constructor(pointListContainer, changeData) {
+  constructor(pointListContainer, changeData, changeMode) {
     this.#pointListContainer = pointListContainer;
     this.#changeData = changeData;
+    this.#changeMode = changeMode;
   }
 
   init = (point) => {
@@ -35,13 +43,11 @@ export default class PointPresenter {
       return;
     }
 
-    // Проверка на наличие в DOM необходима,
-    // чтобы не пытаться заменить то, что не было отрисовано
-    if (this.#pointListContainer.contains(prevPointComponent.element)) {
+    if (this.#mode === Mode.DEFAULT) {
       replace(this.#pointComponent, prevPointComponent);
     }
 
-    if (this.#pointListContainer.contains(prevPointEditComponent.element)) {
+    if (this.#mode === Mode.EDITING) {
       replace(this.#pointEditComponent, prevPointEditComponent);
     }
 
@@ -54,14 +60,23 @@ export default class PointPresenter {
     remove(this.#pointEditComponent);
   };
 
+  resetView = () => { //универсальный метод(для наружного использования) сброса формы на точку
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#replaceFormToPoint();
+    }
+  };
+
   #replacePointToForm = () => {
     replace(this.#pointEditComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#changeMode();
+    this.#mode = Mode.EDITING;
   };
 
   #replaceFormToPoint = () => {
     replace(this.#pointComponent, this.#pointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.DEFAULT;
   };
 
   #escKeyDownHandler = (evt) => {
@@ -75,11 +90,11 @@ export default class PointPresenter {
     this.#replacePointToForm();
   };
 
-  #handleFavoriteClick = () => {
+  #handleFavoriteClick = () => { //метод для обновления задачи через кнопку избранное
     this.#changeData({...this.#point, isFavorite: !this.#point.isFavorite});
   };
 
-  #handleFormSubmit = (point) => {
+  #handleFormSubmit = (point) => {//метод для обновления задачи через кнопку save
     this.#changeData(point);
     this.#replaceFormToPoint();
   };

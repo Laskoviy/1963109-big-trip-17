@@ -29,6 +29,10 @@ export default class BoardPresenter {
     this.#renderBoard();
   };
 
+  #handleModeChange = () => { //метод для изменения варианта представления точки
+    this.#pointPresenter.forEach((presenter) => presenter.resetView());
+  };
+
   //метод для изменения/обновления точки
   #handlePointChange = (updatedPoint) => {
     this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
@@ -42,9 +46,9 @@ export default class BoardPresenter {
 
   //метод для отрисовки точки
   #renderPoint = (point) => {
-    const pointPresenter = new PointPresenter(this.#pointListComponent.element, this.#handlePointChange); //создаем экземпляр презентера точки
+    const pointPresenter = new PointPresenter(this.#pointListComponent.element, this.#handlePointChange, this.#handleModeChange); //создаем экземпляр презентера точки
     pointPresenter.init(point);
-    this.#pointPresenter.set(point.id, pointPresenter);
+    this.#pointPresenter.set(point.id, pointPresenter);//добавляем презентер точки в новую коллекцию(Map)
   };
 
   /* #renderPoints = (from, to) => {

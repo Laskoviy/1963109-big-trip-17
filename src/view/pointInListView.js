@@ -92,12 +92,12 @@ export default class PointInListView extends AbstractView {
     return createPointInListTemplate(this.#point);
   }
 
-  setEditClickHandler = (callback) => {
+  setEditClickHandler = (callback) => { //определяем сеттер(метод) для колбека который вызываем при нажатии на галочку
     this._callback.editClick = callback;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   };
 
-  setFavoriteClickHandler = (callback) => {
+  setFavoriteClickHandler = (callback) => { //определяем сеттер(метод) для колбека который вызываем при нажатии на звездочку
     this._callback.favoriteClick = callback;
     this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteClickHandler);
   };
