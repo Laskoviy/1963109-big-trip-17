@@ -79,7 +79,7 @@ export default class BoardPresenter {
   //метод для отрисовки доски
   #renderBoard = () => {
     render(this.#boardComponent, this.#boardContainer);
-    if (this.#boardPoints.length < 1) {//правильно??
+    if (this.#boardPoints.length < 1) {
       this.#renderNoPoints();
       return;
     }

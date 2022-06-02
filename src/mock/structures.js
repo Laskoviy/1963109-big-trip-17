@@ -30,7 +30,7 @@ export const generateDestination = () => ({
           description: 'Chamonix parliament building'
         }
       ]
-    }, {
+    }, /* {
       id: 2,
       description: 'Amsterdam, is a beautiful city...',
       name: 'Amsterdam',
@@ -40,7 +40,7 @@ export const generateDestination = () => ({
           description: 'Amsterdam parliament building'
         }
       ]
-    }
+    } */
   ]
 }
 );
