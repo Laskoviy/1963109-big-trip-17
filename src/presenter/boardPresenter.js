@@ -7,6 +7,7 @@ import TripListView from '../view/tripListView.js';
 import PointPresenter from './pointPresenter.js';
 import { updateItem } from '../utils/common.js';
 import { SortType } from '../const.js';
+import { sortPointDown, sortPointUp } from '../utils/event.js';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -20,7 +21,7 @@ export default class BoardPresenter {
   #boardPoints = [];
   #pointPresenter = new Map();
   #currentSortType = SortType.DAY;
-  #sourcedBoardPoints = [];
+  #sourcedBoardPoints = []; //бекап исходного массива
 
   constructor(boardContainer, pointsModel) {
     this.#boardContainer = boardContainer;
@@ -54,14 +55,14 @@ export default class BoardPresenter {
     // массив в свойстве _boardPoints
     switch (sortType) {
       case SortType.DATE_UP://исправить
-        this.#boardPoints.sort(sortTaskUp); //исправить
+        this.#boardPoints.sort(sortPointUp); //исправить
         break;
       case SortType.DATE_DOWN://исправить
-        this.#boardPoints.sort(sortTaskDown);//исправить
+        this.#boardPoints.sort(sortPointDown);//исправить
         break;
       default:
         // 3. А когда пользователь захочет "вернуть всё, как было",
-        // мы просто запишем в _boardTasks исходный массив
+        // мы просто запишем в _boardPoints исходный массив
         this.#boardPoints = [...this.#sourcedBoardPoints];
     }
 
@@ -69,9 +70,13 @@ export default class BoardPresenter {
   };
 
   #handleSortTypeChange = (sortType) => {
-    // - Сортируем задачи
-    // - Очищаем список
-    // - Рендерим список заново
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortPoints(sortType);
+    this.#clearPointList(); //очищаем список задач
+    this.#renderPointList(); //отрисовываем список заного
   };
 
   //метод для сортировки
