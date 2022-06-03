@@ -34,13 +34,13 @@ export default class SortView extends AbstractView {
     return createSortTemplate();
   }
 
-  setSortTypeChangeHandler = (callback) => {
+  setSortTypeChangeHandler = (callback) => { //передаем колбэк срабатывающий при наступлении события
     this._callback.sortTypeChange = callback;
     this.element.addEventListener('click', this.#sortTypeChangeHandler);
   };
 
   #sortTypeChangeHandler = (evt) => {
-    if (evt.target.tagName !== 'input') { //не уверен может быть нужно label
+    if (evt.target.tagName !== 'LABLE') {//проверка нажата ли кнопка
       return;
     }
 

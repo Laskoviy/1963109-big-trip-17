@@ -6,13 +6,13 @@ const createEditPointTemplate = (point) => {
   //чтобы шаблон корректно отображался с «пустыми» данными.
   const date1 = dateFrom !== null ? humanizePointDueDateTime(dateFrom) : '';
   const date2 = dateTo !== null ? humanizePointDueDateTime(dateTo) : '';
-  const dest = destination.destinations[0].description !== null ? destination.destinations[0].description : '';
-  const destname = destination.destinations[0].name !== null ? destination.destinations[0].name : '';
   const offtitle1 = offers.offers[0].title !== null ? offers.offers[0].title : '';
   const offprice1 = offers.offers[0].price !== null ? offers.offers[0].price : '';
   const offtitle2 = offers.offers[1].title !== null ? offers.offers[1].title : '';
   const offprice2 = offers.offers[1].price !== null ? offers.offers[1].price : '';
   const offbasepr = basePrice !== null ? basePrice : '';
+  const destinationName = destination.name !== null ? destination.name : '';
+  const destinationDescription = destination.description !== null ? destination.description : '';
 
   /* //отрисовка
   const pointTypeOffeR = offers
@@ -98,7 +98,7 @@ const createEditPointTemplate = (point) => {
       <label class="event__label  event__type-output" for="event-destination-1">
       ${type}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destname} list="destination-list-1">
+      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destinationName} list="destination-list-1">
       <datalist id="destination-list-1">
         <option value="Amsterdam"></option>
         <option value="Geneva"></option>
@@ -155,7 +155,7 @@ const createEditPointTemplate = (point) => {
 
     <section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${dest}</p>
+      <p class="event__destination-description">${destinationDescription}</p>
     </section>
   </section>
 </form>`

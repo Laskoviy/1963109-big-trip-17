@@ -18,11 +18,11 @@ const generatePointType = () => {
   return pointType[randomIndex];
 };
 
-export const generateDestination = () => ({
-  destinations: [
+export const generateDestination = () => {
+  const destinations = [
     {
       id: 1,
-      description: null,
+      description: 'Geneva is a beautiful city',
       name: 'Chamonix',
       pictures: [
         {
@@ -30,20 +30,34 @@ export const generateDestination = () => ({
           description: 'Chamonix parliament building'
         }
       ]
-    }, /* {
+    },
+    {
       id: 2,
-      description: 'Amsterdam, is a beautiful city...',
+      description: 'Geneva is a beautiful city',
+      name: 'Geneva',
+      pictures: [
+        {
+          src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+          description: 'Geneva is a beautiful city'
+        }
+      ]
+    },
+    {
+      id: 3,
+      description: 'Geneva is a beautiful city',
       name: 'Amsterdam',
       pictures: [
         {
           src: 'http://picsum.photos/300/200?r=0.0762563005163317',
-          description: 'Amsterdam parliament building'
+          description: 'Amsterdam is an amazing city'
         }
       ]
-    } */
-  ]
-}
-);
+    }
+  ];
+  const randomIndex = getRandomInteger(0, destinations.length - 1);
+  return destinations[randomIndex];
+};
+
 
 export const generateOffer = () => ({
   type: generateOfferType(),
@@ -62,8 +76,8 @@ export const generateOffer = () => ({
 
 export const generatePoint = () => ({
   basePrice: 1100,
-  dateFrom: '2019-07-10T22:55:56.845Z',
-  dateTo: '2019-07-11T11:22:13.375Z',
+  dateFrom: '2019-07-10T22:55:56.845Z', //дата начала
+  dateTo: '2019-07-11T11:22:13.375Z', //дата окончания
   destination: generateDestination(),
   id: nanoid(),
   isFavorite: false,
@@ -71,7 +85,7 @@ export const generatePoint = () => ({
   type: generatePointType()
 });
 
-export const generateLocalPoint = () => ({
+/* export const generateLocalPoint = () => ({
   basePrice: 222,
   dateFrom: '2019-07-10T22:55:56.845Z',
   dateTo: '2019-07-11T11:22:13.375Z',
@@ -79,7 +93,7 @@ export const generateLocalPoint = () => ({
   isFavorite: false,
   offers: generateOffer(),
   type: generatePointType()
-});
+}); */
 
 /* export const generateAuthorizationError = () => ({
   error: 401,

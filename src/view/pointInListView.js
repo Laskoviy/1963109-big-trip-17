@@ -4,16 +4,11 @@ import { humanizePointDueDate, humanizePointDueTime } from '../utils/event.js';
 
 const createPointInListTemplate = (point) => {
   const { type, destination, dateFrom, dateTo, basePrice, offers, isFavorite } = point;
-
+  const destinationName = destination.name !== null ? destination.name : '';
   const date1 = dateFrom !== null ? humanizePointDueTime(dateFrom) : '';
   const date2 = dateTo !== null ? humanizePointDueTime(dateTo) : '';
 
-  //генерация рандомного места
-  /* const randomIndex = getRandomInteger(0, destination.destinations.length - 1);
-  const dest = destination.destinations[randomIndex];
- */
   //функция по вычитанию времени взял из интернета
-
   const startDate = humanizePointDueTime(dateFrom);
   const endDate = humanizePointDueTime(dateTo);
 
@@ -44,7 +39,7 @@ const createPointInListTemplate = (point) => {
             <div class="event__type">
               <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
             </div>
-            <h3 class="event__title">${type} ${destination.destinations[0].name}</h3>
+            <h3 class="event__title">${type} ${destinationName}</h3>
             <div class="event__schedule">
               <p class="event__time">
                 <time class="event__start-time" datetime="2019-03-18T10:30">${date1}</time>

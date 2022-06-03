@@ -9,32 +9,32 @@ const isPointAhead = (dueDate) => dueDate && dayjs().isBefore(dueDate, 'D');//fu
 
 // Функция помещает задачи без даты в конце списка,
 // возвращая нужный вес для колбэка sort
-const getWeightForNullDate = (dateA, dateB) => {
-  if (dateA === null && dateB === null) {
+const getWeight = (a,b) => {
+  if (a === null && b === null) {
     return 0;
   }
 
-  if (dateA === null) {
+  if (a === null) {
     return 1;
   }
 
-  if (dateB === null) {
+  if (b === null) {
     return -1;
   }
 
   return null;
 };
 
-const sortPointUp = (pointA, pointB) => {
-  const weight = getWeightForNullDate(pointA.dueDate, pointB.dueDate);
-
-  return weight ?? dayjs(pointA.dueDate).diff(dayjs(pointB.dueDate));
-};
-
-const sortPointDown = (pointA, pointB) => {
-  const weight = getWeightForNullDate(pointA.dueDate, pointB.dueDate);
+const sortPointTime = (pointA, pointB) => {//сортировка по убыванию по времени
+  const weight = getWeight(pointA.dueDate, pointB.dueDate);
 
   return weight ?? dayjs(pointB.dueDate).diff(dayjs(pointA.dueDate));
 };
 
-export { humanizePointDueTime, humanizePointDueDate, humanizePointDueDateTime, isPointExpired, isPointAhead, sortPointUp, sortPointDown };
+const sortPointPrice = (pointA, pointB) => {//сортировка по убыванию по цене
+  const weight = getWeight(pointA.basePrice, pointB.basePrice);
+
+  return weight ?? (pointB.basePrice).diff(pointA.basePrice);
+};
+
+export { humanizePointDueTime, humanizePointDueDate, humanizePointDueDateTime, isPointExpired, isPointAhead, sortPointTime, sortPointPrice };

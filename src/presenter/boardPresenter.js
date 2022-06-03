@@ -7,7 +7,7 @@ import TripListView from '../view/tripListView.js';
 import PointPresenter from './pointPresenter.js';
 import { updateItem } from '../utils/common.js';
 import { SortType } from '../const.js';
-import { sortPointDown, sortPointUp } from '../utils/event.js';
+import { sortPointPrice, sortPointTime } from '../utils/event.js';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -54,11 +54,11 @@ export default class BoardPresenter {
     // потому что для сортировки мы будем мутировать
     // массив в свойстве _boardPoints
     switch (sortType) {
-      case SortType.DATE_UP://исправить
-        this.#boardPoints.sort(sortPointUp); //исправить
+      case SortType.PRICE:
+        this.#boardPoints.sort(sortPointPrice);
         break;
-      case SortType.DATE_DOWN://исправить
-        this.#boardPoints.sort(sortPointDown);//исправить
+      case SortType.TIME:
+        this.#boardPoints.sort(sortPointTime);
         break;
       default:
         // 3. А когда пользователь захочет "вернуть всё, как было",
@@ -74,7 +74,7 @@ export default class BoardPresenter {
       return;
     }
 
-    this.#sortPoints(sortType);
+    this.#sortPoints(sortType); //сортируем задачи
     this.#clearPointList(); //очищаем список задач
     this.#renderPointList(); //отрисовываем список заного
   };
