@@ -1,15 +1,15 @@
 import dayjs from 'dayjs';
 
-const humanizePointDueTime = (dueDate) => dayjs(dueDate).format('hh:mm');
-const humanizePointDueDate = (dueDate) => dayjs(dueDate).format('MMM D');
-const humanizePointDueDateTime = (dueDate) => dayjs(dueDate).format('DD/MM/YY_HH:mm');
+const humanizePointDueTime = (dateFrom) => dayjs(dateFrom).format('hh:mm');
+const humanizePointDueDate = (dateFrom) => dayjs(dateFrom).format('MMM D');
+const humanizePointDueDateTime = (dateFrom) => dayjs(dateFrom).format('DD/MM/YY_HH:mm');
 //фильтры
-const isPointExpired = (dueDate) => dueDate && dayjs().isAfter(dueDate, 'D');//past
-const isPointAhead = (dueDate) => dueDate && dayjs().isBefore(dueDate, 'D');//future
+const isPointExpired = (dateFrom) => dateFrom && dayjs().isAfter(dateFrom, 'D');//past
+const isPointAhead = (dateFrom) => dateFrom && dayjs().isBefore(dateFrom, 'D');//future
 
 // Функция помещает задачи без даты в конце списка,
 // возвращая нужный вес для колбэка sort
-const getWeight = (a,b) => {
+const getWeight = (a, b) => {
   if (a === null && b === null) {
     return 0;
   }
@@ -25,16 +25,19 @@ const getWeight = (a,b) => {
   return null;
 };
 
-const sortPointTime = (pointA, pointB) => {//сортировка по убыванию по времени
-  const weight = getWeight(pointA.dueDate, pointB.dueDate);
+const sortPointDay = (pointA, pointB) => {//сортировка по убыванию по дню
+  const weight = getWeight(pointA.dateFrom, pointB.dateFrom);
 
-  return weight ?? dayjs(pointB.dueDate).diff(dayjs(pointA.dueDate));
+  return weight ?? dayjs(pointB.dateFrom).diff(dayjs(pointA.dateFrom));
 };
 
-const sortPointPrice = (pointA, pointB) => {//сортировка по убыванию по цене
-  const weight = getWeight(pointA.basePrice, pointB.basePrice);
+const sortPointTime = (pointA, pointB) => {//сортировка по убыванию по времени поездки не работает!
+  const durationPointA = dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom));
+  const durationPointB = dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom));
 
-  return weight ?? (pointB.basePrice).diff(pointA.basePrice);
+  return durationPointB - durationPointA;
 };
 
-export { humanizePointDueTime, humanizePointDueDate, humanizePointDueDateTime, isPointExpired, isPointAhead, sortPointTime, sortPointPrice };
+const sortPointPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;//сортировка по убыванию по цене поездки
+
+export { humanizePointDueTime, humanizePointDueDate, humanizePointDueDateTime, isPointExpired, isPointAhead, sortPointDay, sortPointTime, sortPointPrice };

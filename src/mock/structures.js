@@ -74,10 +74,12 @@ export const generateOffer = () => ({
   ]
 });
 
+const generateRandomDate = (start, end) => new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+
 export const generatePoint = () => ({
-  basePrice: 1100,
-  dateFrom: '2019-07-10T22:55:56.845Z', //дата начала
-  dateTo: '2019-07-11T11:22:13.375Z', //дата окончания
+  basePrice: getRandomInteger(100, 2000),
+  dateFrom: generateRandomDate(new Date(2022, 4, 1), new Date(2022, 5, 2)), //дата начала
+  dateTo: generateRandomDate(new Date(2022, 5, 2), new Date()), //дата окончания
   destination: generateDestination(),
   id: nanoid(),
   isFavorite: false,

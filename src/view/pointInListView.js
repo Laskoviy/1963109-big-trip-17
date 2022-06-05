@@ -1,4 +1,5 @@
-import { SIXTY, THOUSAND } from '../const.js';
+import dayjs from 'dayjs';
+
 import AbstractView from '../framework/view/abstract-view.js';
 import { humanizePointDueDate, humanizePointDueTime } from '../utils/event.js';
 
@@ -8,28 +9,13 @@ const createPointInListTemplate = (point) => {
   const date1 = dateFrom !== null ? humanizePointDueTime(dateFrom) : '';
   const date2 = dateTo !== null ? humanizePointDueTime(dateTo) : '';
 
-  //функция по вычитанию времени взял из интернета
-  const startDate = humanizePointDueTime(dateFrom);
-  const endDate = humanizePointDueTime(dateTo);
-
+  //функция по вычитанию времени
   const timeDiff = (start, end) => {
-    start = start.split(':');
-    end = end.split(':');
-    const startDateS = new Date(0, 0, 0, start[0], start[1], 0);
-    const endDateS = new Date(0, 0, 0, end[0], end[1], 0);
-    let dif = endDateS.getTime() - startDateS.getTime();
-    let hours = Math.floor(dif / THOUSAND / SIXTY / SIXTY);
-    dif -= hours * THOUSAND * SIXTY * SIXTY;
-    const minutes = Math.floor(dif / THOUSAND / SIXTY);
-
-    // If using time pickers with 24 hours format, add the below line get exact hours
-    if (hours < 0) { hours = hours + 24; }
-
-
-    return `${(hours <= 9 ? '0' : '') + hours}H:${minutes <= 9 ? '0' : ''}${minutes}M`;
+    const durationTime = dayjs(end).diff(dayjs(start));
+    return `${dayjs(durationTime).hour()}H:${dayjs(durationTime).minute()}M`;
   };
 
-  const duration = timeDiff(startDate, endDate);
+  const duration = timeDiff(dateTo, dateFrom);
   const eventDate = humanizePointDueDate(dateFrom);
 
   return (
