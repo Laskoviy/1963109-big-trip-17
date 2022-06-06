@@ -3,7 +3,7 @@ import { SortType } from '../const.js';
 const createSortTemplate = () => (
   `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
             <div class="trip-sort__item  trip-sort__item--day">
-              <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" checked>
+              <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" >
               <label class="trip-sort__btn" for="sort-day" data-sort-type="${SortType.DAY}">Day</label>
             </div>
 
@@ -36,16 +36,14 @@ export default class SortView extends AbstractView {
 
   setSortTypeChangeHandler = (callback) => { //передаем колбэк срабатывающий при наступлении события
     this._callback.sortTypeChange = callback;
-    this.element.addEventListener('click', this.#sortTypeChangeHandler);
+    this.element.querySelectorAll('input[name="trip-sort"]').forEach((input) => {
+      input.addEventListener('change', this.#sortTypeChangeHandler);
+    });
   };
 
   #sortTypeChangeHandler = (evt) => {
-    if (evt.target.tagName !== 'LABEL') {//проверка нажата ли кнопка
-      return;
-    }
-
     evt.preventDefault();
-    this._callback.sortTypeChange(evt.target.dataset.sortType);
+    this._callback.sortTypeChange(evt.target.labels[0].dataset.sortType);
   };
 
 }
