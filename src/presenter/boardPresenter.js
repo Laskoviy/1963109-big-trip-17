@@ -6,6 +6,8 @@ import NoPointsView from '../view/noPointsView.js';
 import TripListView from '../view/tripListView.js';
 import PointPresenter from './pointPresenter.js';
 import { updateItem } from '../utils/common.js';
+import { SortType } from '../const.js';
+import { sortPointDay, sortPointPrice, sortPointTime } from '../utils/event.js';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -18,6 +20,8 @@ export default class BoardPresenter {
 
   #boardPoints = [];
   #pointPresenter = new Map();
+  #currentSortType = SortType.DAY;
+  #sourcedBoardPoints = []; //бекап исходного массива
 
   constructor(boardContainer, pointsModel) {
     this.#boardContainer = boardContainer;
@@ -26,6 +30,11 @@ export default class BoardPresenter {
 
   init = () => {
     this.#boardPoints = [...this.#pointsModel.points];
+    // 1. В отличии от сортировки по любому параметру,
+    // исходный порядок можно сохранить только одним способом -
+    // сохранив исходный массив:
+    this.#sourcedBoardPoints = [...this.#pointsModel.points];
+
     this.#renderBoard();
   };
 
@@ -36,12 +45,51 @@ export default class BoardPresenter {
   //метод для изменения/обновления точки
   #handlePointChange = (updatedPoint) => {
     this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
+    this.#sourcedBoardPoints = updateItem(this.#sourcedBoardPoints, updatedPoint);
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+  };
+
+  #sortPoints = (sortType) => {
+    // 2. Этот исходный массив задач необходим,
+    // потому что для сортировки мы будем мутировать
+    // массив в свойстве _boardPoints
+    switch (sortType) {
+      case SortType.DAY:
+        this.#boardPoints.sort(sortPointDay);
+        break;
+      case SortType.PRICE:
+        this.#boardPoints.sort(sortPointPrice);
+        break;
+      case SortType.TIME:
+        this.#boardPoints.sort(sortPointTime);
+        break;
+      default:
+        // 3. А когда пользователь захочет "вернуть всё, как было",
+        // мы просто запишем в _boardPoints исходный массив
+        this.#boardPoints = [...this.#sourcedBoardPoints];
+    }
+
+    this.#currentSortType = sortType;
+  };
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortPoints(sortType); //сортируем задачи
+    this.#clearPointList(); //очищаем список задач
+    this.#renderPointList(); //отрисовываем список заного
+  };
+
+  #setDefaultSort = () => {
+    this.#sortPoints(this.#currentSortType); //сортируем задачи по умолчанию
   };
 
   //метод для сортировки
   #renderSort = () => {
     render(this.#sortComponent, this.#boardComponent.element, RenderPosition.AFTERBEGIN);
+    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   };
 
   //метод для отрисовки точки
@@ -62,7 +110,7 @@ export default class BoardPresenter {
     render(this.#noPointComponent, this.#boardComponent.element, RenderPosition.AFTERBEGIN);
   };
 
-  #clearPointList = () => {
+  #clearPointList = () => {//метод для очистки списка
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
   };
@@ -84,6 +132,7 @@ export default class BoardPresenter {
       return;
     }
     this.#renderSort();
+    this.#setDefaultSort();
     this.#renderPointList();
   };
 }
