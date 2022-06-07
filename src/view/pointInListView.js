@@ -9,14 +9,30 @@ const createPointInListTemplate = (point) => {
   const date1 = dateFrom !== null ? humanizePointDueTime(dateFrom) : '';
   const date2 = dateTo !== null ? humanizePointDueTime(dateTo) : '';
 
-  //функция по вычитанию времени
-  const timeDiff = (start, end) => {
-    const durationTime = dayjs(end).diff(dayjs(start));
-    return `${dayjs(durationTime).hour()}H:${dayjs(durationTime).minute()}M`;
+  //функция по переводу милисекунд в дни часы минуты
+  const msToTime = (duration) => {
+    let minutes = Math.floor((duration / (1000 * 60)) % 60),
+      hours = Math.floor((duration / (1000 * 60 * 60)) % 24),
+      days = Math.floor((duration / (1000 * 60 * 60 * 24)));
+
+    days =  (days < 10) ? `0${  days}` : days;
+    hours = (hours < 10) ? `0${  hours}` : hours;
+    minutes = (minutes < 10) ? `0${  minutes}` : minutes;
+
+    return `${days}D ${hours}H ${minutes}M`;
   };
 
-  const duration = timeDiff(dateTo, dateFrom);
+  //функция по вычитанию времени
+  const timeDiff = (start, end) => {
+    const duration = dayjs(end).diff(dayjs(start));
+    /* const durationTime = dayjs(end) - (dayjs(start)); */
+    /* return `${dayjs(durationTimeD).day()}`; */
+    return duration;
+  };
+
+  const eventDuration = msToTime(timeDiff(dateFrom, dateTo));
   const eventDate = humanizePointDueDate(dateFrom);
+
 
   return (
     `<li class="trip-events__item">
@@ -32,7 +48,7 @@ const createPointInListTemplate = (point) => {
                 —
                 <time class="event__end-time" datetime="2019-03-18T11:00">${date2}</time>
               </p>
-              <p class="event__duration">${duration}</p>
+              <p class="event__duration">${eventDuration}</p>
             </div>
             <p class="event__price">
               €&nbsp;<span class="event__price-value">${basePrice}</span>

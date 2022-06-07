@@ -110,7 +110,7 @@ export default class BoardPresenter {
     render(this.#noPointComponent, this.#boardComponent.element, RenderPosition.AFTERBEGIN);
   };
 
-  #clearPointList = () => {
+  #clearPointList = () => {//метод для очистки списка
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
   };
