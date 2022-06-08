@@ -82,7 +82,7 @@ export const generatePoint = () => ({
   dateTo: generateRandomDate(new Date(2022, 5, 2), new Date()), //дата окончания
   destination: generateDestination(),
   id: nanoid(),
-  isFavorite: false,
+  isFavorite: Boolean(getRandomInteger(0, 1)),
   offers: generateOffer(),
   type: generatePointType()
 });

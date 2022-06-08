@@ -1,11 +1,47 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizePointDueDateTime } from '../utils/event.js';
+
+const BLANK_POINT = {
+  basePrice: 222,
+  dateFrom: null,
+  dateTo: null,
+  destination: '',
+  isFavorite: false,
+  offers: null,
+  type: ''
+};
+
+const createEditDateTemplate = (dateFrom, dateTo) => (
+  `<label class="visually-hidden" for="event-start-time-1">From</label>
+    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value=${humanizePointDueDateTime(dateFrom)}>
+    —
+    <label class="visually-hidden" for="event-end-time-1">To</label>
+    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value=${humanizePointDueDateTime(dateTo)}></input>`
+);
+
+/* const createEditOfferTemplate = () =>(
+  `<div class="event__offer-selector">
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked="">
+          <label class="event__offer-label" for="event-offer-luggage-1">
+            <span class="event__offer-title">${offtitle1}</span>
+            +€&nbsp;
+            <span class="event__offer-price">${offprice1}</span>
+          </label>
+        </div>
+
+        <div class="event__offer-selector">
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked="">
+          <label class="event__offer-label" for="event-offer-comfort-1">
+            <span class="event__offer-title">${offtitle2}</span>
+            +€&nbsp;
+            <span class="event__offer-price">${offprice2}</span>
+          </label>
+        </div>`
+); */
 
 const createEditPointTemplate = (point) => {
   const { type, destination, offers, dateFrom, dateTo, basePrice } = point;
   //чтобы шаблон корректно отображался с «пустыми» данными.
-  const date1 = dateFrom !== null ? humanizePointDueDateTime(dateFrom) : '';
-  const date2 = dateTo !== null ? humanizePointDueDateTime(dateTo) : '';
   const offtitle1 = offers.offers[0].title !== null ? offers.offers[0].title : '';
   const offprice1 = offers.offers[0].price !== null ? offers.offers[0].price : '';
   const offtitle2 = offers.offers[1].title !== null ? offers.offers[1].title : '';
@@ -14,6 +50,8 @@ const createEditPointTemplate = (point) => {
   const destinationName = destination.name !== null ? destination.name : '';
   const destinationDescription = destination.description !== null ? destination.description : '';
 
+  const dateTemplate = createEditDateTemplate(dateFrom, dateTo);
+  /* const offerTemplate = createEditOfferTemplate(); */
   /* //отрисовка
   const pointTypeOffeR = offers
     .find((offer) => offer.type === point.type);
@@ -107,11 +145,7 @@ const createEditPointTemplate = (point) => {
     </div>
 
     <div class="event__field-group  event__field-group--time">
-      <label class="visually-hidden" for="event-start-time-1">From</label>
-      <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value=${date1}>
-      —
-      <label class="visually-hidden" for="event-end-time-1">To</label>
-      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value=${date2}>
+    ${dateTemplate}
     </div>
 
     <div class="event__field-group  event__field-group--price">
@@ -161,7 +195,7 @@ const createEditPointTemplate = (point) => {
 </form>`
   );
 };
-export default class EditPoint extends AbstractView {
+export default class EditPoint extends AbstractStatefulView {
   #point = null;
 
   constructor(point) {

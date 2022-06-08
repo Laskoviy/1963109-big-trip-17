@@ -14,5 +14,6 @@ const SortType = {
   TIME: 'time',
   PRICE: 'price',
 };
+const OFFERS = ['Add luggage', 'Switch to comfort', 'Add meal', 'Choose seats', 'Travel by train'];
 
-export { THOUSAND, SIXTY, FilterType, SortType };
+export { THOUSAND, SIXTY, FilterType, SortType, OFFERS };
