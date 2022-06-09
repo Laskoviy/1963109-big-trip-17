@@ -1,7 +1,12 @@
 import dayjs from 'dayjs';
-
 import AbstractView from '../framework/view/abstract-view.js';
 import { humanizePointDueDate, humanizePointDueTime } from '../utils/event.js';
+
+/* const createOffersTemplate = (offers) => (
+  `<li class="event__offer">
+<span class="event__offer-title">${offers.offers.title}</span>
++€&nbsp${offers.offers.price}<br>
+</li>`); */
 
 const createPointInListTemplate = (point) => {
   const { type, destination, dateFrom, dateTo, basePrice, offers, isFavorite } = point;
@@ -15,9 +20,9 @@ const createPointInListTemplate = (point) => {
       hours = Math.floor((duration / (1000 * 60 * 60)) % 24),
       days = Math.floor((duration / (1000 * 60 * 60 * 24)));
 
-    days =  (days < 10) ? `0${  days}` : days;
-    hours = (hours < 10) ? `0${  hours}` : hours;
-    minutes = (minutes < 10) ? `0${  minutes}` : minutes;
+    days = (days < 10) ? `0${days}` : days;
+    hours = (hours < 10) ? `0${hours}` : hours;
+    minutes = (minutes < 10) ? `0${minutes}` : minutes;
 
     return `${days}D ${hours}H ${minutes}M`;
   };
@@ -25,8 +30,6 @@ const createPointInListTemplate = (point) => {
   //функция по вычитанию времени
   const timeDiff = (start, end) => {
     const duration = dayjs(end).diff(dayjs(start));
-    /* const durationTime = dayjs(end) - (dayjs(start)); */
-    /* return `${dayjs(durationTimeD).day()}`; */
     return duration;
   };
 
@@ -55,12 +58,7 @@ const createPointInListTemplate = (point) => {
             </p>
             <h4 class="visually-hidden">Offers:</h4>
             <ul class="event__selected-offers">
-              <li class="event__offer">
-                <span class="event__offer-title">${offers.offers[0].title} </span>
-                +€&nbsp${offers.offers[0].price}<br>
-                <span class="event__offer-price">${offers.offers[1].title}</span>
-                +€&nbsp${offers.offers[1].price}
-              </li>
+            ${createOffersTemplate}
             </ul>
             <button class="event__favorite-btn event__favorite-btn--${isFavorite ? 'active' : ''}" type="button">
               <span class="visually-hidden">Add to favorite</span>
