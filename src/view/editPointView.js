@@ -1,7 +1,7 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizePointDueDateTime } from '../utils/event.js';
 
-const BLANK_POINT = {
+/* const BLANK_POINT = {
   basePrice: 222,
   dateFrom: null,
   dateTo: null,
@@ -9,7 +9,7 @@ const BLANK_POINT = {
   isFavorite: false,
   offers: null,
   type: ''
-};
+}; */
 
 const createEditDateTemplate = (dateFrom, dateTo) => (
   `<label class="visually-hidden" for="event-start-time-1">From</label>
