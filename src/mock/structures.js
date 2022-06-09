@@ -59,20 +59,136 @@ export const generateDestination = () => {
 };
 
 
-export const generateOffer = () => ({
-  type: generateOfferType(),
-  offers: [
+export const generateOffer = () => {
+  const offers = [
     {
-      id: 1,
-      title: 'Upgrade to a business class',
-      price: 120
-    }, {
-      id: 2,
-      title: 'Choose the radio station',
-      price: 60
+      type: 'taxi',
+      offers: [
+        {
+          id: 1,
+          title: 'Upgrade to a business class',
+          price: 120
+        },
+        {
+          id: 2,
+          title: 'Order Uber',
+          price: 20
+        },
+        {
+          id: 3,
+          title: 'Chose radio station',
+          price: 5
+        },
+        {
+          id: 4,
+          title: 'Add luggage',
+          price: 50
+        }
+      ]
+    },
+    {
+      type: 'bus',
+      offers: [] //предположим, что нет для точки доп.предложений
+    },
+    {
+      type: 'train',
+      offers: [
+        {
+          id: 1,
+          title: 'Add luggage',
+          price: 50
+        },
+        {
+          id: 2,
+          title: 'Switch to comfort',
+          price: 80
+        },
+        {
+          id: 3,
+          title: 'Add meal',
+          price: 15
+        },
+        {
+          id: 4,
+          title: 'Choose seats',
+          price: 5
+        }
+      ]
+    },
+    {
+      type: 'ship',
+      offers: [
+        {
+          id: 1,
+          title: 'Add luggage',
+          price: 50
+        },
+        {
+          id: 2,
+          title: 'Switch to comfort',
+          price: 80
+        },
+        {
+          id: 3,
+          title: 'Add meal',
+          price: 15
+        },
+        {
+          id: 4,
+          title: 'Choose seats',
+          price: 5
+        }
+      ]
+    },
+    {
+      type: 'flight',
+      offers: [
+        {
+          id: 1,
+          title: 'Add luggage',
+          price: 50
+        },
+        {
+          id: 2,
+          title: 'Switch to comfort',
+          price: 80
+        },
+        {
+          id: 3,
+          title: 'Add meal',
+          price: 15
+        },
+        {
+          id: 4,
+          title: 'Choose seats',
+          price: 5
+        }
+      ]
+    },
+    {
+      type: 'check-in',
+      offers: [{
+        id: 1,
+        title: 'Add meal',
+        price: 15
+      }]
+    },
+    {
+      type: 'sightseeing',
+      offers: [{
+        id: 1,
+        title: 'Add meal',
+        price: 15
+      }]
+    },
+    {
+      type: 'restaurant',
+      offers: [] //предположим, что нет для точки доп.предложений
     }
-  ]
-});
+  ];
+  const randomIndex = getRandomInteger(0, offers.length - 1);
+  return offers[randomIndex];
+};
 
 const generateRandomDate = (start, end) => new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 
