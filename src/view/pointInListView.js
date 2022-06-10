@@ -2,11 +2,19 @@ import dayjs from 'dayjs';
 import AbstractView from '../framework/view/abstract-view.js';
 import { humanizePointDueDate, humanizePointDueTime } from '../utils/event.js';
 
-/* const createOffersTemplate = (offers) => (
-  `<li class="event__offer">
-<span class="event__offer-title">${offers.offers.title}</span>
-+€&nbsp${offers.offers.price}<br>
-</li>`); */
+
+const createOffersTemplate = (offers) => {
+  let markup = '';
+
+  offers.offers.forEach((offer) => {
+    markup += `<li class="event__offer">
+    <span class="event__offer-title">${offer.title}</span>
+    +€&nbsp${offer.price}<br>
+    </li>`;
+  });
+
+  return markup;
+};
 
 const createPointInListTemplate = (point) => {
   const { type, destination, dateFrom, dateTo, basePrice, offers, isFavorite } = point;
@@ -14,16 +22,16 @@ const createPointInListTemplate = (point) => {
   const date1 = dateFrom !== null ? humanizePointDueTime(dateFrom) : '';
   const date2 = dateTo !== null ? humanizePointDueTime(dateTo) : '';
 
+  /* const {offers} = availableOffers.find((offers) => offers.type === type); */
+
   //функция по переводу милисекунд в дни часы минуты
   const msToTime = (duration) => {
     let minutes = Math.floor((duration / (1000 * 60)) % 60),
       hours = Math.floor((duration / (1000 * 60 * 60)) % 24),
       days = Math.floor((duration / (1000 * 60 * 60 * 24)));
-
     days = (days < 10) ? `0${days}` : days;
     hours = (hours < 10) ? `0${hours}` : hours;
     minutes = (minutes < 10) ? `0${minutes}` : minutes;
-
     return `${days}D ${hours}H ${minutes}M`;
   };
 
@@ -36,7 +44,6 @@ const createPointInListTemplate = (point) => {
   const eventDuration = msToTime(timeDiff(dateFrom, dateTo));
   const eventDate = humanizePointDueDate(dateFrom);
 
-
   return (
     `<li class="trip-events__item">
     <div class="event">
@@ -44,7 +51,7 @@ const createPointInListTemplate = (point) => {
             <div class="event__type">
               <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
             </div>
-            <h3 class="event__title">${type} ${destinationName}</h3>
+            <h3 class="event__title">${offers.offers.type} ${destinationName}</h3>
             <div class="event__schedule">
               <p class="event__time">
                 <time class="event__start-time" datetime="2019-03-18T10:30">${date1}</time>
@@ -58,7 +65,7 @@ const createPointInListTemplate = (point) => {
             </p>
             <h4 class="visually-hidden">Offers:</h4>
             <ul class="event__selected-offers">
-            ${createOffersTemplate}
+            ${createOffersTemplate(offers)}
             </ul>
             <button class="event__favorite-btn event__favorite-btn--${isFavorite ? 'active' : ''}" type="button">
               <span class="visually-hidden">Add to favorite</span>

@@ -42,10 +42,10 @@ const createEditDateTemplate = (dateFrom, dateTo) => (
 const createEditPointTemplate = (point) => {
   const { type, destination, offers, dateFrom, dateTo, basePrice } = point;
   //чтобы шаблон корректно отображался с «пустыми» данными.
-  const offtitle1 = offers.offers[0].title !== null ? offers.offers[0].title : '';
-  const offprice1 = offers.offers[0].price !== null ? offers.offers[0].price : '';
-  const offtitle2 = offers.offers[1].title !== null ? offers.offers[1].title : '';
-  const offprice2 = offers.offers[1].price !== null ? offers.offers[1].price : '';
+  // const offtitle1 = offers.offers[0].title !== null ? offers.offers[0].title : '';
+  // const offprice1 = offers.offers[0].price !== null ? offers.offers[0].price : '';
+  // const offtitle2 = offers.offers[1].title !== null ? offers.offers[1].title : '';
+  // const offprice2 = offers.offers[1].price !== null ? offers.offers[1].price : '';
   const offbasepr = basePrice !== null ? basePrice : '';
   const destinationName = destination.name !== null ? destination.name : '';
   const destinationDescription = destination.description !== null ? destination.description : '';
@@ -170,18 +170,18 @@ const createEditPointTemplate = (point) => {
         <div class="event__offer-selector">
           <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked="">
           <label class="event__offer-label" for="event-offer-luggage-1">
-            <span class="event__offer-title">${offtitle1}</span>
+            <span class="event__offer-title"></span>
             +€&nbsp;
-            <span class="event__offer-price">${offprice1}</span>
+            <span class="event__offer-price"></span>
           </label>
         </div>
 
         <div class="event__offer-selector">
           <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked="">
           <label class="event__offer-label" for="event-offer-comfort-1">
-            <span class="event__offer-title">${offtitle2}</span>
+            <span class="event__offer-title"></span>
             +€&nbsp;
-            <span class="event__offer-price">${offprice2}</span>
+            <span class="event__offer-price"></span>
           </label>
         </div>
       </div>
