@@ -170,18 +170,18 @@ const createEditPointTemplate = (point) => {
         <div class="event__offer-selector">
           <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked="">
           <label class="event__offer-label" for="event-offer-luggage-1">
-            <span class="event__offer-title"> </span>
+            <span class="event__offer-title"></span>
             +€&nbsp;
-            <span class="event__offer-price"> </span>
+            <span class="event__offer-price"></span>
           </label>
         </div>
 
         <div class="event__offer-selector">
           <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked="">
           <label class="event__offer-label" for="event-offer-comfort-1">
-            <span class="event__offer-title"> </span>
+            <span class="event__offer-title"></span>
             +€&nbsp;
-            <span class="event__offer-price"> </span>
+            <span class="event__offer-price"></span>
           </label>
         </div>
       </div>

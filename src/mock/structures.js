@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 import { getRandomInteger } from '../utils/common.js';
 
-export const serverOffers = [   //массив с обьектами офферами
+export const serverOffers = [
   {
     type: 'taxi',
     offers: [
@@ -190,7 +190,7 @@ export const generateDestination = () => {
 
 const generateRandomDate = (start, end) => new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 
-const generateOffersIds = () => { //генерация массива айдишников для поинта
+const generateOffersIds = () => {
   const count = getRandomInteger(0, 3);
 
   return new Array(count).fill('').map(() => getRandomInteger(0, 5));
