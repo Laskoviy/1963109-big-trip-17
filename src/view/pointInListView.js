@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import AbstractView from '../framework/view/abstract-view.js';
-import { serverOffers } from '../mock/structures.js';
+import { mockOffers } from '../mock/structures.js';
 import { humanizePointDueDate, humanizePointDueTime } from '../utils/event.js';
 
 // Создаем разметку офферов
@@ -29,7 +29,7 @@ const createPointInListTemplate = (point) => {
   const date1 = dateFrom !== null ? humanizePointDueTime(dateFrom) : '';
   const date2 = dateTo !== null ? humanizePointDueTime(dateTo) : '';
 
-  const availableOffers = serverOffers.find((offer) => offer.type === type); // Доступные офферы по типу поинта
+  const availableOffers = mockOffers.find((offer) => offer.type === type); // Доступные офферы по типу поинта
   const resultOffers = availableOffers.offers.filter((offer) => offers.find((id) => id === offer.id)); // Офферы отфильтрованные по id
 
   //функция по переводу милисекунд в дни часы минуты

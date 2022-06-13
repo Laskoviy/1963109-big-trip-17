@@ -1,6 +1,16 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { humanizePointDueDateTime } from '../utils/event.js';
 
+/* const BLANK_POINT = {
+  basePrice: 222,
+  dateFrom: null,
+  dateTo: null,
+  destination: '',
+  isFavorite: false,
+  offers: null,
+  type: ''
+}; */
+
 const createAddNewPointTemplate = (point) => {
   const { type, destination, offers, dateFrom, dateTo, basePrice } = point;
   const date1 = dateFrom !== null ? humanizePointDueDateTime(dateFrom) : '';

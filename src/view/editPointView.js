@@ -1,16 +1,6 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { serverOffers } from '../mock/structures.js';
+import { mockOffers } from '../mock/structures.js';
 import { humanizePointDueDateTime } from '../utils/event.js';
-
-/* const BLANK_POINT = {
-  basePrice: 222,
-  dateFrom: null,
-  dateTo: null,
-  destination: '',
-  isFavorite: false,
-  offers: null,
-  type: ''
-}; */
 
 const createEditDateTemplate = (dateFrom, dateTo) => (
   `<label class="visually-hidden" for="event-start-time-1">From</label>
@@ -29,7 +19,7 @@ const createEditOfferTemplate = (offers) => {
       markup +=
         `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" checked="">
-          <label class="event__offer-label" for="event-offer-luggage-1">
+          <label class="event__offer-label" for=${offer.id}>
             <span class="event__offer-title">${offer.title}</span>
             +€&nbsp;
             <span class="event__offer-price">${offer.price}</span>
@@ -55,8 +45,8 @@ const createEditPointTemplate = (point) => {
   const destinationName = destination.name !== null ? destination.name : '';
   const destinationDescription = destination.description !== null ? destination.description : '';
 
-  const availableOffers = serverOffers.find((offer) => offer.type === type); // Доступные офферы по типу поинта
-  const resultOffers = availableOffers.offers.filter((offer) => offers.find((id) => id === offer.id)); // Офферы отфильтрованные по id
+  const selectedOffers = mockOffers.find((offer) => offer.type === type); // Доступные офферы по типу поинта
+  const resultOffers = selectedOffers.offers.filter((offer) => offers.find((id) => id === offer.id)); // Офферы отфильтрованные по id
 
   const dateTemplate = createEditDateTemplate(dateFrom, dateTo);
   /* const offerTemplate = createEditOfferTemplate(); */

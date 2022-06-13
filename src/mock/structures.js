@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 import { getRandomInteger } from '../utils/common.js';
 
-export const serverOffers = [
+export const mockOffers = [
   {
     type: 'taxi',
     offers: [
