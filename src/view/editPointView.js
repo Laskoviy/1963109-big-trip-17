@@ -1,4 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
+import { serverOffers } from '../mock/structures.js';
 import { humanizePointDueDateTime } from '../utils/event.js';
 
 /* const BLANK_POINT = {
@@ -19,56 +20,63 @@ const createEditDateTemplate = (dateFrom, dateTo) => (
     <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value=${humanizePointDueDateTime(dateTo)}></input>`
 );
 
-/* const createEditOfferTemplate = () =>(
-  `<div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked="">
+//редактирование доступных предложений
+const createEditOfferTemplate = (offers) => {
+  let markup = '';
+  // Если массив офферов в поинте не пустой
+  if (offers.length > 0) {
+    offers.forEach((offer) => {
+      markup +=
+        `<div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" checked="">
           <label class="event__offer-label" for="event-offer-luggage-1">
-            <span class="event__offer-title">${offtitle1}</span>
+            <span class="event__offer-title">${offer.title}</span>
             +€&nbsp;
-            <span class="event__offer-price">${offprice1}</span>
+            <span class="event__offer-price">${offer.price}</span>
           </label>
-        </div>
+          </div>`;
+    });
 
-        <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked="">
-          <label class="event__offer-label" for="event-offer-comfort-1">
-            <span class="event__offer-title">${offtitle2}</span>
-            +€&nbsp;
-            <span class="event__offer-price">${offprice2}</span>
-          </label>
-        </div>`
-); */
+    return markup;
+  }
+
+  // Если пустой, то не выводим ничего
+  return '';
+};
 
 const createEditPointTemplate = (point) => {
-  const { type, destination, dateFrom, dateTo, basePrice } = point;
+  const { type, destination, dateFrom, dateTo, offers, basePrice } = point;
   //чтобы шаблон корректно отображался с «пустыми» данными.
   /* const offtitle1 = offers.offers[0].title !== null ? offers.offers[0].title : '';
-  const offprice1 = offers.offers[0].price !== null ? offers.offers[0].price : '';
-  const offtitle2 = offers.offers[1].title !== null ? offers.offers[1].title : '';
-  const offprice2 = offers.offers[1].price !== null ? offers.offers[1].price : ''; */
+    const offprice1 = offers.offers[0].price !== null ? offers.offers[0].price : '';
+    const offtitle2 = offers.offers[1].title !== null ? offers.offers[1].title : '';
+    const offprice2 = offers.offers[1].price !== null ? offers.offers[1].price : ''; */
   const offbasepr = basePrice !== null ? basePrice : '';
   const destinationName = destination.name !== null ? destination.name : '';
   const destinationDescription = destination.description !== null ? destination.description : '';
 
+  const availableOffers = serverOffers.find((offer) => offer.type === type); // Доступные офферы по типу поинта
+  const resultOffers = availableOffers.offers.filter((offer) => offers.find((id) => id === offer.id)); // Офферы отфильтрованные по id
+
   const dateTemplate = createEditDateTemplate(dateFrom, dateTo);
   /* const offerTemplate = createEditOfferTemplate(); */
   /* //отрисовка
-  const pointTypeOffeR = offers
-    .find((offer) => offer.type === point.type);
+    const pointTypeOffeR = offers
+      .find((offer) => offer.type === point.type);
 
-  pointTypeOfferR.offers
-    .map((offer) => '<input type= "checkbox"/>');
+    pointTypeOfferR.offers
+      .map((offer) => '<input type= "checkbox"/>');
 
-  //отрисовать и отметить
-  const pointTypeOffer = offers
-    .find((offer) => offer.type === point.type);
+    //отрисовать и отметить
+    const pointTypeOffer = offers
+      .find((offer) => offer.type === point.type);
 
-  pointTypeOffer.offers
-    .map((offer) => {
-      const checked = point.offers.includes(offer.id) ? 'checked' : '';
+    pointTypeOffer.offers
+      .map((offer) => {
+        const checked = point.offers.includes(offer.id) ? 'checked' : '';
 
-      return `<input type= "checkbox" ${checked} />`;
-    }); */
+        return `<input type= "checkbox" ${checked} />`;
+      }); */
 
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -165,25 +173,10 @@ const createEditPointTemplate = (point) => {
   <section class="event__details">
     <section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
       <div class="event__available-offers">
-        <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked="">
-          <label class="event__offer-label" for="event-offer-luggage-1">
-            <span class="event__offer-title"></span>
-            +€&nbsp;
-            <span class="event__offer-price"></span>
-          </label>
-        </div>
 
-        <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked="">
-          <label class="event__offer-label" for="event-offer-comfort-1">
-            <span class="event__offer-title"></span>
-            +€&nbsp;
-            <span class="event__offer-price"></span>
-          </label>
-        </div>
+      ${createEditOfferTemplate(resultOffers)}
+      </div>
       </div>
     </section>
 
