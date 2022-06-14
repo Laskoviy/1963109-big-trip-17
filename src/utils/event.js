@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-const humanizePointDueTime = (dateFrom) => dayjs(dateFrom).format('hh:mm');
+const humanizePointDueTime = (dateFrom) => dayjs(dateFrom).format('HH:mm');
 const humanizePointDueDate = (dateFrom) => dayjs(dateFrom).format('MMM D');
 const humanizePointDueDateTime = (dateFrom) => dayjs(dateFrom).format('DD/MM/YY_HH:mm');
 //фильтры

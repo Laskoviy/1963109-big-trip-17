@@ -16,6 +16,11 @@ const createAddNewPointTemplate = (point) => {
   const date1 = dateFrom !== null ? humanizePointDueDateTime(dateFrom) : '';
   const date2 = dateTo !== null ? humanizePointDueDateTime(dateTo) : '';
 
+  /* const destinationName = destination.name !== null ? destination.name : '';
+  const destinationDescription = destination.description !== null ? destination.description : '';
+
+  const availableOffers = mockOffers.find((offer) => offer.type === type); // Доступные офферы по типу поинта */
+
   return (
     `<form class="event event--edit" action="#" method="post">
   <header class="event__header">
@@ -117,18 +122,18 @@ const createAddNewPointTemplate = (point) => {
         <div class="event__offer-selector">
           <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked="">
           <label class="event__offer-label" for="event-offer-luggage-1">
-            <span class="event__offer-title">${offers.offers[0].title}</span>
+            <span class="event__offer-title">Название</span>
             +€&nbsp;
-            <span class="event__offer-price">${offers.offers[0].price}</span>
+            <span class="event__offer-price">Цена</span>
           </label>
         </div>
 
         <div class="event__offer-selector">
           <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked="">
           <label class="event__offer-label" for="event-offer-comfort-1">
-            <span class="event__offer-title">${offers.offers[1].title}</span>
+            <span class="event__offer-title">Название</span>
             +€&nbsp;
-            <span class="event__offer-price">${offers.offers[1].price}</span>
+            <span class="event__offer-price">Цена</span>
           </label>
         </div>
       </div>
@@ -160,4 +165,16 @@ export default class AddNewPointView extends AbstractView {
   get template() {
     return createAddNewPointTemplate(this.#point);
   }
+
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.addEventListener('submit', this.#formSubmitHandler); // для кнопки отправки
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formSubmitHandler); // для кнопки отмена
+  };
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit(this.#point);
+  };
+
 }

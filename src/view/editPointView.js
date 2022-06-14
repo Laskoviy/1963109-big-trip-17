@@ -3,10 +3,10 @@ import { mockOffers } from '../mock/structures.js';
 import { humanizePointDueDateTime } from '../utils/event.js';
 
 const createEditDateTemplate = (dateFrom, dateTo) => (
-  `<label class="visually-hidden" for="event-start-time-1">From</label>
+  `<label class="visually-hidden" for="event-start-time-1">${dateFrom}</label>
     <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value=${humanizePointDueDateTime(dateFrom)}>
     —
-    <label class="visually-hidden" for="event-end-time-1">To</label>
+    <label class="visually-hidden" for="event-end-time-1">${dateTo}</label>
     <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value=${humanizePointDueDateTime(dateTo)}></input>`
 );
 
