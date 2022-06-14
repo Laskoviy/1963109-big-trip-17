@@ -11,14 +11,22 @@ const createEditDateTemplate = (dateFrom, dateTo) => (
 );
 
 //редактирование доступных предложений
-const createEditOfferTemplate = (offers) => {
-  let markup = '';
+const createEditOfferTemplate = (selectedOffers, offers) => {
+  let markup ='' /* `<div class="event__offer-selector">
+  <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offers.offer.id}" type="checkbox" name="event-offer-${offers.offer.id}" checked="" >
+    <label class="event__offer-label" for=${offers.offer.id}>
+      <span class="event__offer-title">${offers.offer.title}</span>
+      +€&nbsp;
+      <span class="event__offer-price">${offers.offer.price}</span>
+    </label>
+    </div>` */;
+
   // Если массив офферов в поинте не пустой
-  if (offers.length > 0) {
-    offers.forEach((offer) => {
+  if (selectedOffers.length > 0) {
+    selectedOffers.forEach((offer) => {
       markup +=
         `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" checked="">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" ${selectedOffers.some((selectedOffer) => selectedOffer.id === offer.id) ? 'checked' : ''}>
           <label class="event__offer-label" for=${offer.id}>
             <span class="event__offer-title">${offer.title}</span>
             +€&nbsp;
@@ -45,11 +53,11 @@ const createEditPointTemplate = (point) => {
   const destinationName = destination.name !== null ? destination.name : '';
   const destinationDescription = destination.description !== null ? destination.description : '';
 
-  const selectedOffers = mockOffers.find((offer) => offer.type === type); // Доступные офферы по типу поинта
-  const resultOffers = selectedOffers.offers.filter((offer) => offers.find((id) => id === offer.id)); // Офферы отфильтрованные по id
+  const availableOffers = mockOffers.find((offer) => offer.type === type); // Доступные офферы по типу поинта
+  const selectedOffers = availableOffers.offers.filter((offer) => offers.find((id) => id === offer.id)); // Офферы отфильтрованные по id
 
   const dateTemplate = createEditDateTemplate(dateFrom, dateTo);
-  /* const offerTemplate = createEditOfferTemplate(); */
+
   /* //отрисовка
     const pointTypeOffeR = offers
       .find((offer) => offer.type === point.type);
@@ -165,7 +173,7 @@ const createEditPointTemplate = (point) => {
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
       <div class="event__available-offers">
 
-      ${createEditOfferTemplate(resultOffers)}
+      ${createEditOfferTemplate(selectedOffers, availableOffers)}
       </div>
       </div>
     </section>

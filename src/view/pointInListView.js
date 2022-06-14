@@ -30,7 +30,7 @@ const createPointInListTemplate = (point) => {
   const date2 = dateTo !== null ? humanizePointDueTime(dateTo) : '';
 
   const availableOffers = mockOffers.find((offer) => offer.type === type); // Доступные офферы по типу поинта
-  const resultOffers = availableOffers.offers.filter((offer) => offers.find((id) => id === offer.id)); // Офферы отфильтрованные по id
+  const selectedOffers = availableOffers.offers.filter((offer) => offers.find((id) => id === offer.id)); // Офферы отфильтрованные по id
 
   //функция по переводу милисекунд в дни часы минуты
   const msToTime = (duration) => {
@@ -73,7 +73,7 @@ const createPointInListTemplate = (point) => {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-        ${createOffersTemplate(resultOffers)}
+        ${createOffersTemplate(selectedOffers)}
         </ul>
         <button class="event__favorite-btn event__favorite-btn--${isFavorite ? 'active' : ''}" type="button">
           <span class="visually-hidden">Add to favorite</span>
