@@ -8,9 +8,9 @@ import HeaderPresenter from './presenter/headerPresenter.js';
 import { generateFilter } from './mock/filter.js';
 
 
-const pointsModel = new PointsModel();
+export const pointsModel = new PointsModel(); //обьект с массивом поинтов
 const filters = generateFilter(pointsModel.points);
-
+console.log(pointsModel.points);
 const sitePageHeaderElement = document.querySelector('.page-header');
 const sitePageHeaderContainerElement = sitePageHeaderElement.querySelector('.page-header__container');
 const siteTripMainElement = sitePageHeaderContainerElement.querySelector('.trip-main');
