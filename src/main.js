@@ -9,6 +9,7 @@ import { generateFilter } from './mock/filter.js';
 
 export const pointsModel = new PointsModel(); //обьект с массивом поинтов
 const filters = generateFilter(pointsModel.points);
+
 const sitePageHeaderElement = document.querySelector('.page-header');
 const sitePageHeaderContainerElement = sitePageHeaderElement.querySelector('.page-header__container');
 export const siteTripMainElement = sitePageHeaderContainerElement.querySelector('.trip-main');

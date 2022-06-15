@@ -2,10 +2,7 @@ import AbstractView from '../framework/view/abstract-view.js';
 import { humanizePointDueDate } from '../utils/event.js';
 
 const createTripInfoMainTemplate = (pointsModel) => {
-  /* const { destination, dateFrom } = point;
-  const destinationName = destination.name !== null ? destination.name : '';
-  const eventDate = humanizePointDueDate(dateFrom);
- */
+
 
   const sortedArr = pointsModel.points.sort((a, b) => {
     if (a.dateFrom > b.dateFrom) {
@@ -27,6 +24,7 @@ const createTripInfoMainTemplate = (pointsModel) => {
       <p class="trip-info__dates">${startTripDate}&nbsp;—&nbsp;${endTripDate}</p>
     </div>
   `);
+
 };
 
 export default class TripInfoMainView extends AbstractView {
