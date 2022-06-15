@@ -7,7 +7,7 @@ const createTripInfoMainTemplate = (pointsModel) => {
   const eventDate = humanizePointDueDate(dateFrom);
  */
 
-  const sortedArr = pointsModel.sort((a, b) => {
+  const sortedArr = pointsModel.points.sort((a, b) => {
     if (a.dateFrom > b.dateFrom) {
       return 1;
     }
@@ -18,20 +18,16 @@ const createTripInfoMainTemplate = (pointsModel) => {
     return 0;
   });
 
-
   const startTripDate = humanizePointDueDate(sortedArr[0].dateFrom);
   const endTripDate = humanizePointDueDate(sortedArr[sortedArr.length - 1].dateTo);
 
-
-  return (
-    `<div class="trip-info__main">
-  <h1 class="trip-info__title">  —  </h1>
-
-  <p class="trip-info__dates">${startTripDate}&nbsp;—&nbsp;${endTripDate}</p>
-</div>`
-  );
+  return (`
+    <div class="trip-info__main">
+      <h1 class="trip-info__title">  —  </h1>
+      <p class="trip-info__dates">${startTripDate}&nbsp;—&nbsp;${endTripDate}</p>
+    </div>
+  `);
 };
-
 
 export default class TripInfoMainView extends AbstractView {
   #point = null;

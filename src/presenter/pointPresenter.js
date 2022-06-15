@@ -1,14 +1,9 @@
+import { Mode } from '../const';
 import { remove, render, replace } from '../framework/render';
 import EditPoint from '../view/editPointView';
 import PointInListView from '../view/pointInListView';
 
-//варианты в которых может находиться точка маршрута
-const Mode = {
-  DEFAULT: 'DEFAULT', //обычный
-  EDITING: 'EDITING', //редактирование
-};
 export default class PointPresenter {
-
   #pointListContainer = null;
   #changeData = null;
   #changeMode = null;
@@ -91,7 +86,7 @@ export default class PointPresenter {
   };
 
   #handleFavoriteClick = () => { //метод для обновления задачи через кнопку избранное
-    this.#changeData({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#changeData({ ...this.#point, isFavorite: !this.#point.isFavorite });
   };
 
   #handleFormSubmit = (point) => {//метод для обновления задачи через кнопку save

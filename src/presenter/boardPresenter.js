@@ -1,13 +1,15 @@
 import { render, RenderPosition } from '../framework/render.js';
 import BoardView from '../view/boardView.js';
 import SortView from '../view/sortView.js';
-/* import AddNewPointView from '../view/addNewPointView.js'; */
 import NoPointsView from '../view/noPointsView.js';
 import TripListView from '../view/tripListView.js';
 import PointPresenter from './pointPresenter.js';
 import { updateItem } from '../utils/common.js';
 import { SortType } from '../const.js';
 import { sortPointDay, sortPointPrice, sortPointTime } from '../utils/event.js';
+import AddNewPointView from '../view/addNewPointView.js';
+import NewEventButtonView from '../view/newEventButtonView.js';
+import { siteTripMainElement } from '../main.js';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -17,6 +19,8 @@ export default class BoardPresenter {
   #pointListComponent = new TripListView();
   #sortComponent = new SortView();
   #noPointComponent = new NoPointsView();
+  #addNewPointView = new AddNewPointView();
+  #addNewPointViewButton = new NewEventButtonView();
 
   #boardPoints = [];
   #pointPresenter = new Map();
@@ -36,6 +40,7 @@ export default class BoardPresenter {
     this.#sourcedBoardPoints = [...this.#pointsModel.points];
 
     this.#renderBoard();
+    this.#addNewPointView.setNewPointClickHandler(this.#handleNewPointClick);
   };
 
   #handleModeChange = () => { //метод для изменения варианта представления точки
@@ -121,7 +126,19 @@ export default class BoardPresenter {
     for (let i = 0; i < this.#boardPoints.length; i++) {
       this.#renderPoint(this.#boardPoints[i]);
     }
-    /* render(new AddNewPointView(this.#boardPoints[i]), this.#boardContainer);  */
+  };
+
+  #renderAddNewPoint = () => {
+    render(this.#addNewPointView, this.#pointListComponent.element, RenderPosition.AFTERBEGIN);
+  };
+
+  #renderAddNewPointBtn = () => {
+    render(this.#addNewPointViewButton, siteTripMainElement);
+  };
+
+  #handleNewPointClick = () => {
+    this.#renderAddNewPoint();
+    this.#addNewPointViewButton.element.setAttribute('disabled', true);
   };
 
   //метод для отрисовки доски
@@ -134,5 +151,6 @@ export default class BoardPresenter {
     this.#renderSort();
     this.#setDefaultSort();
     this.#renderPointList();
+    this.#renderAddNewPointBtn();
   };
 }

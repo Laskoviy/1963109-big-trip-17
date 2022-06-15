@@ -15,5 +15,20 @@ const SortType = {
   PRICE: 'price',
 };
 
+const BLANK_POINT = {
+  basePrice: 222,
+  dateFrom: null,
+  dateTo: null,
+  destination: '',
+  isFavorite: false,
+  offers: null,
+  type: ''
+};
 
-export { THOUSAND, SIXTY, FilterType, SortType};
+//варианты в которых может находиться точка маршрута
+const Mode = {
+  DEFAULT: 'DEFAULT', //обычный
+  EDITING: 'EDITING', //редактирование
+};
+
+export { THOUSAND, SIXTY, FilterType, SortType, BLANK_POINT, Mode };
