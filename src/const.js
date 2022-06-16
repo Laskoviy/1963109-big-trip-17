@@ -16,12 +16,12 @@ const SortType = {
 };
 
 const BLANK_POINT = {
-  basePrice: 222,
-  dateFrom: null,
-  dateTo: null,
+  basePrice: '',
+  dateFrom: '',
+  dateTo: '',
   destination: '',
   isFavorite: false,
-  offers: null,
+  offers: '',
   type: ''
 };
 

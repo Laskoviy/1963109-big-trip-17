@@ -1,4 +1,4 @@
-import { render, RenderPosition } from '../framework/render.js';
+import { remove, render, RenderPosition } from '../framework/render.js';
 import BoardView from '../view/boardView.js';
 import SortView from '../view/sortView.js';
 import NoPointsView from '../view/noPointsView.js';
@@ -14,6 +14,7 @@ import { siteTripMainElement } from '../main.js';
 export default class BoardPresenter {
   #boardContainer = null;
   #pointsModel = null;
+  #changeData = null;
 
   #boardComponent = new BoardView();
   #pointListComponent = new TripListView();
@@ -41,10 +42,16 @@ export default class BoardPresenter {
 
     this.#renderBoard();
     this.#addNewPointView.setNewPointClickHandler(this.#handleNewPointClick);
+    this.#addNewPointView.setFormSubmitHandler(this.#handleFormSubmit);//подключение обработчика для кнопки отправки формы
   };
 
   #handleModeChange = () => { //метод для изменения варианта представления точки
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
+  };
+
+  #handleFormSubmit = (point) => {//метод для обновления задачи через кнопку save
+    this.#changeData(point);
+    this.#removeAddNewPoint();
   };
 
   //метод для изменения/обновления точки
@@ -128,17 +135,34 @@ export default class BoardPresenter {
     }
   };
 
+  //метод для отрисовки формы создания поинта в списке
   #renderAddNewPoint = () => {
     render(this.#addNewPointView, this.#pointListComponent.element, RenderPosition.AFTERBEGIN);
+    document.addEventListener('keydown', this.#escKeyDownHandler);
   };
 
+  //метод для удаления формы создания поинта в списке
+  #removeAddNewPoint = () => {
+    remove(this.#addNewPointView);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#addNewPointViewButton.element.removeAttribute('disabled', true); //кнопка new Event становится обычной
+  };
+
+  #escKeyDownHandler = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this.#removeAddNewPoint();
+    }
+  };
+
+  //метод для отрисовки кнопки добавления нового поинта в список
   #renderAddNewPointBtn = () => {
     render(this.#addNewPointViewButton, siteTripMainElement);
   };
 
   #handleNewPointClick = () => {
     this.#renderAddNewPoint();
-    this.#addNewPointViewButton.element.setAttribute('disabled', true);
+    this.#addNewPointViewButton.element.setAttribute('disabled', true); //кнопка new Event становится серой
   };
 
   //метод для отрисовки доски

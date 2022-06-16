@@ -1,5 +1,6 @@
 import { BLANK_POINT } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
+/* import { mockOffers } from '../mock/structures.js'; */
 
 const createAddNewPointTemplate = (point = {}) => {
   const {
@@ -9,6 +10,14 @@ const createAddNewPointTemplate = (point = {}) => {
     destination,
     type
   } = point;
+
+  /*  const availableOffers = mockOffers.find((offer) => offer.type === type); // Доступные офферы по типу поинта
+  const {offers} = availableOffers.find((offer) => offer.type === selectedType); // selectedType здесь - это выбранный в текущий момент тип путешествия
+
+  offers.map((offer) => (
+    `<input class="event__offer-checkbox visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" checked="">
+   ...`
+  )); */
 
   return (`
     <li class="trip-events__item">
@@ -75,7 +84,7 @@ const createAddNewPointTemplate = (point = {}) => {
 
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-1">${type ? type : ''}</label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination} list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination}  >
             <datalist id="destination-list-1">
               <option value="Amsterdam"></option>
               <option value="Geneva"></option>

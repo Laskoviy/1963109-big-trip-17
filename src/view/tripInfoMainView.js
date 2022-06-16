@@ -17,10 +17,11 @@ const createTripInfoMainTemplate = (pointsModel) => {
 
   const startTripDate = humanizePointDueDate(sortedArr[0].dateFrom);
   const endTripDate = humanizePointDueDate(sortedArr[sortedArr.length - 1].dateTo);
-
+  const firstDest = sortedArr[0].destination.name;
+  const lastDest = sortedArr[sortedArr.length - 1].destination.name;
   return (`
     <div class="trip-info__main">
-      <h1 class="trip-info__title">  —  </h1>
+      <h1 class="trip-info__title"> ${firstDest} —...— ${lastDest} </h1>
       <p class="trip-info__dates">${startTripDate}&nbsp;—&nbsp;${endTripDate}</p>
     </div>
   `);
