@@ -159,22 +159,22 @@ const createEditPointTemplate = (point) => {
 
 export default class EditPoint extends AbstractStatefulView {
   #point = null;
-  // #offers = null;
-  // #filteredOffers = null;
-  // #destinations = null;
-  // #typeOfRadios = null;
+  #offers = null;
+  #filteredOffers = null;
+  #destinations = null;
+  #typeOfRadios = null;
 
   constructor(point) {
     super();
     this.#point = point;
 
-    // this.#destinations = destinations;
-    // this.#offers = mockOffers;
-    // this.#filteredOffers = this.#filterOffers(point.type);
-    // this._state = EditPoint.parsePointToState(point, this.#filteredOffers);
-    // this.#typeOfRadios = Array.from(this.element.querySelectorAll('.event__type-input'));
+    this.#destinations = destinations;
+    this.#offers = mockOffers;
+    this.#filteredOffers = this.#filterOffers(point.type);
+    this._state = EditPoint.parsePointToState(point, this.#filteredOffers);
+    this.#typeOfRadios = Array.from(this.element.querySelectorAll('.event__type-input'));
 
-    // this.#setComponentHandlers();
+    this.#setComponentHandlers();
   }
 
   get template() {
@@ -187,14 +187,9 @@ export default class EditPoint extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler); // для стрелочки
   };
 
-  #formSubmitHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.formSubmit(this.#point);
-  };
-
   #filterOffers = (type) => {
     if (type) {
-      const filteredOffers = this.offers.filter((offer) => offer.type === type);
+      const filteredOffers = this.#offers.filter((offer) => offer.type === type);
 
       if (filteredOffers.length > 0) {
         return filteredOffers[0].offers;
@@ -206,12 +201,7 @@ export default class EditPoint extends AbstractStatefulView {
     }
   };
 
-  #setFormSubmitHandler = (callback) => {
-    this._callback.formSubmit = callback;
-    this.element.addEventListener('submit', this.#formSubmitHandler);
-  };
-
-  formSubmitHandler = (evt) => {
+  #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this._callback.formSubmit(EditPoint.parseStateToPoint(this._state));
   };
@@ -239,7 +229,7 @@ export default class EditPoint extends AbstractStatefulView {
   #typeChangeHandler = (evt) => {
     evt.preventDefault();
     const typeRadioId = evt.target.getAttribute('for');
-    const typeRadioInput = this.typeOfRadios.filter((elm) => elm.id === typeRadioId)[0];
+    const typeRadioInput = this.#typeOfRadios.filter((elm) => elm.id === typeRadioId)[0];
 
     if (!typeRadioInput) {
       return;
@@ -247,14 +237,14 @@ export default class EditPoint extends AbstractStatefulView {
 
     const type = typeRadioInput.value;
     this.updateElement({point: {...this._state.point, type}});
-    this.filteredOffers = this.#filterOffers(this.offers);
-    this.updateElement({offers: this.filteredOffers});
+    this.#filteredOffers = this.#filterOffers(this.#offers);
+    this.updateElement({offers: this.#filteredOffers});
   };
 
   #destinationChangeHandler = (evt) => {
     evt.preventDefault();
     const newDestinationName = evt.target.value;
-    const destination = this.destinations.filter((item) => item.name === newDestinationName)[0];
+    const destination = this.#destinations.filter((item) => item.name === newDestinationName)[0];
 
     this.updateElement({point: {...this._state.point, destination}});
   };
@@ -266,7 +256,7 @@ export default class EditPoint extends AbstractStatefulView {
 
   _restoreHandlers = () => {
     this.#setComponentHandlers();
-    this.#setFormSubmitHandler(this._callback.submit);
+    this.setFormSubmitHandler(this._callback.submit);
     this.setClickSaveHandler(this._callback.click);
     this.setClickDeleteHandler(this._callback.delete);
   };
