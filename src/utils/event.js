@@ -38,6 +38,18 @@ const sortPointTime = (pointA, pointB) => {//сортировка по убыв�
   return durationPointB - durationPointA;
 };
 
-const sortPointPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;//сортировка по убыванию по цене поездки
+const getTitle = (boardPoint) => {
+  let pretextTitle = 'to';
+  if (boardPoint.type.includes('sightseeing') || boardPoint.type.includes('restaurant')) {
+    pretextTitle = 'in';
+  }
+  if (boardPoint.type.includes('check-in')) {
+    pretextTitle = 'at';
+  }
+  return pretextTitle;
+};
 
-export { humanizePointDueTime, humanizePointDueDate, humanizePointDueDateTime, isPointExpired, isPointAhead, sortPointDay, sortPointTime, sortPointPrice };
+const sortPointPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;//сортировка по убыванию по цене поездки
+const capitalise = (word) => word.slice(0, 1).toUpperCase() + word.slice(1);
+
+export { getTitle, humanizePointDueTime, capitalise, humanizePointDueDate, humanizePointDueDateTime, isPointExpired, isPointAhead, sortPointDay, sortPointTime, sortPointPrice };
