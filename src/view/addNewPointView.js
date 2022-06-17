@@ -1,6 +1,6 @@
 import { BLANK_POINT } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
-/* import { mockOffers } from '../mock/structures.js'; */
+import { mockOffers } from '../mock/structures.js';
 
 const createAddNewPointTemplate = (point = {}) => {
   const {
@@ -11,13 +11,13 @@ const createAddNewPointTemplate = (point = {}) => {
     type
   } = point;
 
-  /*  const availableOffers = mockOffers.find((offer) => offer.type === type); // Доступные офферы по типу поинта
-  const {offers} = availableOffers.find((offer) => offer.type === selectedType); // selectedType здесь - это выбранный в текущий момент тип путешествия
+  // const availableOffers = mockOffers.find((offer) => offer.type === type); // Доступные офферы по типу поинта
+  // const { offers } = availableOffers.find((offer) => offer.type === selectedType); // selectedType здесь - это выбранный в текущий момент тип путешествия
 
-  offers.map((offer) => (
-    `<input class="event__offer-checkbox visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" checked="">
-   ...`
-  )); */
+  // offers.map((offer) => (
+  //   `<input class="event__offer-checkbox visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" checked="">
+  //  ...`
+  // ));
 
   return (`
     <li class="trip-events__item">
@@ -182,5 +182,14 @@ export default class AddNewPointView extends AbstractView {
   #newPointClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.newPointClick();
+  };
+
+  setNewPointCancelHandler = (callback) => {
+    this._callback.newPointCancel = callback;
+    document.querySelector('.event__reset-btn').addEventListener('click', this.#newPointCancelHandler);
+  };
+
+  #newPointCancelHandler = () => {
+    this._callback.newPointCancel();
   };
 }

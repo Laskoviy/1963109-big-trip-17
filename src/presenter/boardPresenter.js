@@ -42,7 +42,7 @@ export default class BoardPresenter {
 
     this.#renderBoard();
     this.#addNewPointView.setNewPointClickHandler(this.#handleNewPointClick);
-    this.#addNewPointView.setFormSubmitHandler(this.#handleFormSubmit);//подключение обработчика для кнопки отправки формы
+    // this.#addNewPointView.setFormSubmitHandler(this.#handleFormSubmit);//подключение обработчика для кнопки отправки формы
   };
 
   #handleModeChange = () => { //метод для изменения варианта представления точки
@@ -54,11 +54,11 @@ export default class BoardPresenter {
     this.#removeAddNewPoint();
   };
 
-  //метод для изменения/обновления точки
+  // Метод для изменения/обновления точки
   #handlePointChange = (updatedPoint) => {
     this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
     this.#sourcedBoardPoints = updateItem(this.#sourcedBoardPoints, updatedPoint);
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+    this.#pointPresenter.get(updatedPoint.point.id).init(updatedPoint);
   };
 
   #sortPoints = (sortType) => {
@@ -163,6 +163,16 @@ export default class BoardPresenter {
   #handleNewPointClick = () => {
     this.#renderAddNewPoint();
     this.#addNewPointViewButton.element.setAttribute('disabled', true); //кнопка new Event становится серой
+    this.#addNewPointView.setNewPointCancelHandler(this.#handleNewPointCancel);
+    this.#addNewPointView.setFormSubmitHandler(this.#handleNewPointSave);
+  };
+
+  #handleNewPointCancel = () => {
+    this.#removeAddNewPoint();
+  };
+
+  #handleNewPointSave = () => {
+    this.#removeAddNewPoint();
   };
 
   //метод для отрисовки доски
