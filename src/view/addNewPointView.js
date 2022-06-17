@@ -1,6 +1,6 @@
 import { BLANK_POINT } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
-import { mockOffers } from '../mock/structures.js';
+/* import { mockOffers } from '../mock/structures.js'; */
 
 const createAddNewPointTemplate = (point = {}) => {
   const {
@@ -158,10 +158,11 @@ export default class AddNewPointView extends AbstractView {
   constructor(point = BLANK_POINT) {
     super();
     this.#point = point;
+    this._state = AddNewPointView.parsePointToState(point);
   }
 
   get template() {
-    return createAddNewPointTemplate(this.#point);
+    return createAddNewPointTemplate(this._state);
   }
 
   setFormSubmitHandler = (callback) => {
@@ -171,7 +172,7 @@ export default class AddNewPointView extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit(this.#point);
+    this._callback.formSubmit(AddNewPointView.parseStateToPoint(this._state));
   };
 
   setNewPointClickHandler = (callback) => {
@@ -191,5 +192,19 @@ export default class AddNewPointView extends AbstractView {
 
   #newPointCancelHandler = () => {
     this._callback.newPointCancel();
+  };
+
+  // метод для превращения поинта в состояние
+  static parsePointToState = (point) => ({...point
+    /* при смене типа точки маршрута нужно показать соответствующий типу набор дополнительных опций;
+    при выборе пункта назначения нужно показать новые описание и фотографии. */
+
+  });
+
+
+  static parseStateToPoint = (state) => { //метод для парсинга состояния в поинт
+    const point = {...state};
+    return point;
+
   };
 }
