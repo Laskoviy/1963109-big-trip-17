@@ -58,7 +58,7 @@ export default class BoardPresenter {
   #handlePointChange = (updatedPoint) => {
     this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
     this.#sourcedBoardPoints = updateItem(this.#sourcedBoardPoints, updatedPoint);
-    this.#pointPresenter.get(updatedPoint.point.id).init(updatedPoint);
+    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
   };
 
   #sortPoints = (sortType) => {
@@ -110,12 +110,6 @@ export default class BoardPresenter {
     pointPresenter.init(point);
     this.#pointPresenter.set(point.id, pointPresenter);//добавляем презентер точки в новую коллекцию(Map)
   };
-
-  /* #renderPoints = (from, to) => {
-    this.#boardPoints
-      .slice(from, to)
-      .forEach((point) => this.#renderPoint(point));
-  }; */
 
   //метод для отрисовки пустого поля
   #renderNoPoints = () => {

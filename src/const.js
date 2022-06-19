@@ -31,6 +31,4 @@ const Mode = {
   EDITING: 'EDITING', //редактирование
 };
 
-const TYPES_LIBRARY = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
-
-export { THOUSAND, TYPES_LIBRARY, SIXTY, FilterType, SortType, BLANK_POINT, Mode };
+export { THOUSAND, SIXTY, FilterType, SortType, BLANK_POINT, Mode };

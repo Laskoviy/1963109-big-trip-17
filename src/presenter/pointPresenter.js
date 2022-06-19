@@ -90,7 +90,7 @@ export default class PointPresenter {
   };
 
   #handleFormSubmit = (point) => {//метод для обновления задачи через кнопку save
-    this.#changeData(point);
+    this.#changeData({ ...this.#point, ...point });
     this.#replaceFormToPoint();
   };
 }

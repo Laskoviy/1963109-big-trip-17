@@ -1,6 +1,5 @@
-import { TYPES_LIBRARY } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { mockOffers } from '../mock/structures.js';
+import { destinations, mockOffers, pointTypes } from '../mock/structures.js';
 import { getTitle, humanizePointDueDateTime } from '../utils/event.js';
 import { capitalise } from '../utils/event.js';
 const createEditDateTemplate = (dateFrom, dateTo) => (
@@ -20,7 +19,7 @@ const createEditOfferTemplate = (selectedOffers, offers) => {
     offers.forEach((offer) => {
       markup +=
         `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" ${selectedOffers.some((selectedOffer) => selectedOffer.id === offer.id) ? 'checked' : ''}>
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" value="${offer.id}" name="event-offer-${offer.id}" ${selectedOffers.some((selectedOffer) => selectedOffer.id === offer.id) ? 'checked' : ''}>
           <label class="event__offer-label" for="event-offer-${offer.id}">
             <span class="event__offer-title">${offer.title}</span>
             +€&nbsp;
@@ -36,14 +35,14 @@ const createEditOfferTemplate = (selectedOffers, offers) => {
   return '';
 };
 
-const createEditPointTemplate = (point) => {
+const createEditPointTemplate = (point = {}) => {
   const { type, destination, dateFrom, dateTo, offers, basePrice, checkedType, id } = point;
   //чтобы шаблон корректно отображался с «пустыми» данными.
   const offbasepr = basePrice !== null ? basePrice : '';
   const destinationName = destination.name !== null ? destination.name : '';
   const destinationDescription = destination.description !== null ? destination.description : '';
 
-  const availableOffers = mockOffers.find((offer) => offer.type === type); // Доступные офферы по типу поинта
+  const availableOffers = mockOffers.find((offer) => offer.type === checkedType); // Доступные офферы по типу поинта
   const selectedOffers = availableOffers.offers.filter((offer) => offers.find((id) => id === offer.id)); // Офферы отфильтрованные по id
 
   const dateTemplate = createEditDateTemplate(dateFrom, dateTo);
@@ -59,11 +58,11 @@ const createEditPointTemplate = (point) => {
       </label>
       <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
-      <div class="event__type-list">
+    <div class="event__type-list">
         <fieldset class="event__type-group">
           <legend class="visually-hidden">Event type</legend>
 
-          ${TYPES_LIBRARY.map((eventType) => (
+          ${pointTypes.map((eventType) => (
       `<div class="event__type-item">
                           <input id="event-type-${eventType}-${id}"
                                  class="event__type-input  visually-hidden" type="radio" name="event-type"
@@ -71,22 +70,20 @@ const createEditPointTemplate = (point) => {
                                  ${eventType === type && 'checked'}>
                           <label class="event__type-label  event__type-label--${eventType}"
                                  for="event-type-${eventType}-${id}">${capitalise(eventType)}</label>
-                        </div>`)).join('')}
+      </div>`)).join('')}
         </fieldset>
-      </div>
     </div>
-
-    <div class="event__field-group  event__field-group--destination">
-      <label class="event__label  event__type-output" for="event-destination-1">
-      ${checkedType ? checkedType : type} ${getTitle(point)}
-      </label>
-      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destinationName} list="destination-list-1">
-      <datalist id="destination-list-1">
-        <option value="Amsterdam"></option>
-        <option value="Geneva"></option>
-        <option value="Chamonix"></option>
-      </datalist>
     </div>
+    ${destinations.map((destination) => (
+        `<div class="event__field-group  event__field-group--destination">
+          <label class="event__label  event__type-output" for=${destination}-${id}>
+            ${checkedType ? checkedType : type} ${getTitle(point)}
+          </label>
+          <input class="event__input  event__input--destination" id="event-destination-${destination}-${id}" type="text" name="event-destination" value=${destinationName} list="destination-list-1">
+            <datalist id="destination-list-1">
+              <option value="${destination.name}"></option>
+            </datalist>
+        </div>`)).join('')}
 
     <div class="event__field-group  event__field-group--time">
     ${dateTemplate}
@@ -185,6 +182,26 @@ export default class EditPoint extends AbstractStatefulView {
 
   #setInnerHandlers = () => {
     this.element.querySelector('.event__type-list').addEventListener('change', this.#changeTypeHandler);
+    this.element.querySelectorAll('.event__offer-checkbox').forEach((checkbox) => {
+      checkbox.addEventListener('change', this.#changeOfferHandler);
+    });
+  };
+
+  // метод для добавления офферов при выборе в состояние
+  #changeOfferHandler = (evt) => {
+    evt.preventDefault();
+    let offers = [...this._state.offers];
+    const offerValue = Number(evt.target.value);
+    const offerIndex = offers.findIndex((offer) => offer === offerValue);
+    if (offerIndex !== -1) {
+      offers = [...offers.slice(0, offerIndex), ...offers.slice(offerIndex + 1, offers.length)];
+    } else {
+      offers.push(offerValue);
+    }
+
+    this.updateElement({
+      offers: offers,
+    });
   };
 
 

@@ -1,5 +1,7 @@
 import { BLANK_POINT } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
+import { pointTypes } from '../mock/structures.js';
+import { capitalise } from '../utils/event.js';
 /* import { mockOffers } from '../mock/structures.js'; */
 
 const createAddNewPointTemplate = (point = {}) => {
@@ -8,7 +10,8 @@ const createAddNewPointTemplate = (point = {}) => {
     dateFrom,
     dateTo,
     destination,
-    type
+    type,
+    id
   } = point;
 
   // const availableOffers = mockOffers.find((offer) => offer.type === type); // Доступные офферы по типу поинта
@@ -34,50 +37,14 @@ const createAddNewPointTemplate = (point = {}) => {
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
 
-                <div class="event__type-item">
-                  <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-                  <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus">
-                  <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
-                  <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
-                  <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
-                  <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" checked="">
-                  <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
-                  <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
-                  <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
-                  <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
-                </div>
+                ${pointTypes.map((eventType) => (`<div class="event__type-item">
+                    <input id="event-type-${eventType}-${id}"
+                    class="event__type-input  visually-hidden" type="radio" name="event-type"
+                      value="${eventType}"
+                      ${eventType === type && 'checked'}>
+                    <label class="event__type-label  event__type-label--${eventType}"
+                          for="event-type-${eventType}-${id}">${capitalise(eventType)}</label>
+                    </div>`)).join('')}
               </fieldset>
             </div>
           </div>
@@ -195,7 +162,8 @@ export default class AddNewPointView extends AbstractView {
   };
 
   // метод для превращения поинта в состояние
-  static parsePointToState = (point) => ({...point
+  static parsePointToState = (point) => ({
+    ...point
     /* при смене типа точки маршрута нужно показать соответствующий типу набор дополнительных опций;
     при выборе пункта назначения нужно показать новые описание и фотографии. */
 
@@ -203,7 +171,7 @@ export default class AddNewPointView extends AbstractView {
 
 
   static parseStateToPoint = (state) => { //метод для парсинга состояния в поинт
-    const point = {...state};
+    const point = { ...state };
     return point;
 
   };

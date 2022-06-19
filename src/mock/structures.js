@@ -170,14 +170,6 @@ export const destinations = [
 
 export const pointTypes = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
-/* const generateOfferType = () => {
-  const travelType = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
-
-  const randomIndex = getRandomInteger(0, travelType.length - 1);
-
-  return travelType[randomIndex];
-}; */
-
 const generateRandomDate = (start, end) => new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 
 const generateOffersIds = () => {
