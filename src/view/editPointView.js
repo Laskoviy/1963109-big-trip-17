@@ -74,16 +74,16 @@ const createEditPointTemplate = (point = {}) => {
         </fieldset>
     </div>
     </div>
-    ${destinations.map((destination) => (
-        `<div class="event__field-group  event__field-group--destination">
+
+        <div class="event__field-group  event__field-group--destination">
           <label class="event__label  event__type-output" for=${destination}-${id}>
             ${checkedType ? checkedType : type} ${getTitle(point)}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-${destination}-${id}" type="text" name="event-destination" value=${destinationName} list="destination-list-1">
-            <datalist id="destination-list-1">
-              <option value="${destination.name}"></option>
+          <input class="event__input  event__input--destination" id="event-destination-${destination}-${id}" type="text" name="event-destination" value=${destinationName} list="${destination}-${id}">
+            <datalist id="${destination}-${id}">
+            ${destinations.map((destination) => (`<option value="${destination.name}"></option>`)).join('')}
             </datalist>
-        </div>`)).join('')}
+        </div>
 
     <div class="event__field-group  event__field-group--time">
     ${dateTemplate}
