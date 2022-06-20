@@ -43,7 +43,7 @@ const createEditPointTemplate = (point = {}) => {
   const destinationDescription = destination.description !== null ? destination.description : '';
 
   const availableOffers = mockOffers.find((offer) => offer.type === checkedType); // Доступные офферы по типу поинта
-  const selectedOffers = availableOffers.offers.filter((offer) => offers.find((id) => id === offer.id)); // Офферы отфильтрованные по id
+  const selectedOffers = availableOffers.offers.filter((offer) => offers.find((Offerid) => Offerid === offer.id)); // Офферы отфильтрованные по id
 
   const dateTemplate = createEditDateTemplate(dateFrom, dateTo);
 
@@ -184,6 +184,7 @@ export default class EditPoint extends AbstractStatefulView {
     this.element.querySelector('.event__type-list').addEventListener('change', this.#changeTypeHandler);
     this.element.querySelectorAll('.event__offer-checkbox').forEach((checkbox) => {
       checkbox.addEventListener('change', this.#changeOfferHandler);
+      checkbox.addEventListener('change', this.#changeDestinationHandler);
     });
   };
 
@@ -204,10 +205,28 @@ export default class EditPoint extends AbstractStatefulView {
     });
   };
 
+  // метод для добавления описания и фотографий при выборе в места
+  #changeDestinationHandler = (evt) => {
+    evt.preventDefault();
+    let destination = [...this._state.destination];
+    const destinationValue = Number(evt.target.value);
+    const destinationIndex = destination.findIndex((destination) => destination === destinationValue);
+    if (destinationIndex !== -1) {
+      destination = [...destination.slice(0, destinationIndex), ...destination.slice(destinationIndex + 1, destination.length)];
+    } else {
+      destination.push(destinationValue);
+    }
+
+    this.updateElement({
+      destination: destination,
+    });
+  };
+
 
   static parsePointToState = (point) => ({
     ...point,
-    checkedType: point.type
+    checkedType: point.type,
+    checkedDestination: point.destination.name
   });
 
   static parseStateToPoint = (state) => {
@@ -217,6 +236,12 @@ export default class EditPoint extends AbstractStatefulView {
       point.type = point.checkedType;
     }
     delete point.checkedType;
+
+    if (point.checkedDestination !== point.destination.name) {
+      point.destination.name = point.checkedDestination;
+    }
+    delete point.checkedDestination;
+
     return point;
   };
 }
