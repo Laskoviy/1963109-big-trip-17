@@ -142,6 +142,7 @@ export default class EditPoint extends AbstractStatefulView {
     );
   };
 
+  //востановленные обработчики
   _restoreHandlers = () => {
     this.#setInnerHandlers();
     this.setFormSubmitHandler(this._callback.formSubmit);
@@ -154,6 +155,7 @@ export default class EditPoint extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler); // для стрелочки
   };
 
+  //обработчик формы отправки
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this._callback.formSubmit(EditPoint.parseStateToPoint(this._state));
@@ -180,11 +182,24 @@ export default class EditPoint extends AbstractStatefulView {
     });
   };
 
+  #changeDestinationHandler = (evt) => {
+    evt.preventDefault();
+    if (evt.target.name !== 'event-input') {
+      return;
+    }
+
+    this.updateElement({
+      checkedDestination: evt.target.value,
+      offers: [],
+    });
+  };
+
   #setInnerHandlers = () => {
     this.element.querySelector('.event__type-list').addEventListener('change', this.#changeTypeHandler);
+    this.element.querySelector('.event__input').addEventListener('change', this.#changeDestinationHandler);
     this.element.querySelectorAll('.event__offer-checkbox').forEach((checkbox) => {
       checkbox.addEventListener('change', this.#changeOfferHandler);
-      checkbox.addEventListener('change', this.#changeDestinationHandler);
+      checkbox.addEventListener('change', this.#changeDestinationInfoHandler);
     });
   };
 
@@ -206,7 +221,7 @@ export default class EditPoint extends AbstractStatefulView {
   };
 
   // метод для добавления описания и фотографий при выборе в места
-  #changeDestinationHandler = (evt) => {
+  #changeDestinationInfoHandler = (evt) => {
     evt.preventDefault();
     let destination = [...this._state.destination];
     const destinationValue = Number(evt.target.value);
