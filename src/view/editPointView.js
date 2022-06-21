@@ -1,7 +1,6 @@
 import { BLANK_POINT, DESTINATION_NAMES } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { destinations, mockOffers, pointTypes } from '../mock/structures.js';
-import { getRandomInteger, getRandomItem } from '../utils/common.js';
 import { getTitle, humanizePointDueDateTime } from '../utils/event.js';
 import { capitalise } from '../utils/event.js';
 const createEditDateTemplate = (dateFrom, dateTo) => (
@@ -229,8 +228,9 @@ export default class EditPoint extends AbstractStatefulView {
 
     this.updateElement({
       checkedDestination: evt.target.value,
-      destination: [],
-    });
+      destination: []
+    }
+    );
   };
 
   //внутренние слушатели
@@ -261,9 +261,9 @@ export default class EditPoint extends AbstractStatefulView {
   };
 
   // метод для добавления описания  при выборе в места
-  #changeDestinationInfoHandler = (evt) => {
+  #changeDestinationInfoHandler = (evt) => { //скорее всего проблема в том что point.destination это обьект а не массив
     evt.preventDefault();
-    let destinationS = [...this._state.destination.description];
+    let destinationS = [...this._state.destination];
     const destinationValue = Number(evt.target.value);
     const destinationIndex = destinationS.findIndex((destination) => destination === destinationValue);
     if (destinationIndex !== -1) {
@@ -273,7 +273,7 @@ export default class EditPoint extends AbstractStatefulView {
     }
 
     this.updateElement({
-      destination: destinationS,
+      destination: destinationS,//тут проблема
     });
   };
 
