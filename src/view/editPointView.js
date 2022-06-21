@@ -51,7 +51,7 @@ const createEditPointTemplate = (point = {}) => {
   const destinationDescription = destination.description !== null ? destination.description : '';
 
   const availableOffers = mockOffers.find((offer) => offer.type === checkedType); // Доступные офферы по типу поинта
-  const selectedOffers = availableOffers.offers.filter((offer) => offers.find((Offerid) => Offerid === offer.id)); // Офферы отфильтрованные по id
+  const selectedOffers = availableOffers.offers.filter((offer) => offers.find((offerid) => offerid === offer.id)); // Офферы отфильтрованные по id
 
   const dateTemplate = createEditDateTemplate(dateFrom, dateTo);
   const destinationsTemplate = createDestinationsTemplate(DESTINATION_NAMES, destination.name);
@@ -223,13 +223,13 @@ export default class EditPoint extends AbstractStatefulView {
 
   #changeDestinationHandler = (evt) => {
     evt.preventDefault();
-    if (evt.target.name !== 'event__input  event__input--destination') {
+    if (evt.target.name !== 'event__input--destination') {
       return;
     }
 
     this.updateElement({
       checkedDestination: evt.target.value,
-      offers: [],
+      destination: [],
     });
   };
 
@@ -260,10 +260,10 @@ export default class EditPoint extends AbstractStatefulView {
     });
   };
 
-  // метод для добавления описания и фотографий при выборе в места
+  // метод для добавления описания  при выборе в места
   #changeDestinationInfoHandler = (evt) => {
     evt.preventDefault();
-    let destinationS = [...this._state.destination];
+    let destinationS = [...this._state.destination.description];
     const destinationValue = Number(evt.target.value);
     const destinationIndex = destinationS.findIndex((destination) => destination === destinationValue);
     if (destinationIndex !== -1) {
@@ -281,7 +281,7 @@ export default class EditPoint extends AbstractStatefulView {
   static parsePointToState = (point) => ({
     ...point,
     checkedType: point.type,
-    checkedDestination: point.destination.name
+    checkedDestination: point.destination.description
   });
 
   static parseStateToPoint = (state) => {
@@ -293,7 +293,7 @@ export default class EditPoint extends AbstractStatefulView {
     delete point.checkedType;
 
     if (point.checkedDestination !== point.destination.name) {
-      point.destination.name = point.checkedDestination;
+      point.destination = point.checkedDestination;
     }
     delete point.checkedDestination;
 
