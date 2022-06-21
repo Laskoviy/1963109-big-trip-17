@@ -1,5 +1,7 @@
+import { BLANK_POINT, DESTINATION_NAMES } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { destinations, mockOffers, pointTypes } from '../mock/structures.js';
+import { getRandomInteger, getRandomItem } from '../utils/common.js';
 import { getTitle, humanizePointDueDateTime } from '../utils/event.js';
 import { capitalise } from '../utils/event.js';
 const createEditDateTemplate = (dateFrom, dateTo) => (
@@ -8,6 +10,12 @@ const createEditDateTemplate = (dateFrom, dateTo) => (
     —
     <label class="visually-hidden" for="event-end-time-1">${dateTo}</label>
     <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value=${humanizePointDueDateTime(dateTo)}></input>`
+);
+
+const createDestinationsTemplate = (destinationS, eventDestination) => (
+  `
+    ${destinationS.map((destination) => `<option value="${destination}" ${destination === eventDestination ? 'selected="selected"' : ''}></option>`).join('')}
+  `
 );
 
 //редактирование доступных предложений
@@ -46,7 +54,7 @@ const createEditPointTemplate = (point = {}) => {
   const selectedOffers = availableOffers.offers.filter((offer) => offers.find((Offerid) => Offerid === offer.id)); // Офферы отфильтрованные по id
 
   const dateTemplate = createEditDateTemplate(dateFrom, dateTo);
-
+  const destinationsTemplate = createDestinationsTemplate(DESTINATION_NAMES, destination.name);
   return (
     `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -76,12 +84,12 @@ const createEditPointTemplate = (point = {}) => {
     </div>
 
     <div class="event__field-group  event__field-group--destination">
-      <label class="event__label  event__type-output" for=destination-list-1>
+      <label class="event__label  event__type-output" for="event-destination-list-1">
         ${checkedType ? checkedType : type} ${getTitle(point)}
       </label>
       <input class="event__input  event__input--destination" id="event-destination-list-1" type="text" name="event-destination" value=${destinationName} list="destination-list-1">
         <datalist id="destination-list-1">
-          ${destinations.map((destinationItem) => `<option value="${destinationItem.name}"></option>`).join('')}
+        ${destinationsTemplate}
         </datalist>
     </div>
 
@@ -107,7 +115,6 @@ const createEditPointTemplate = (point = {}) => {
     <section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
       <div class="event__available-offers">
-
       ${createEditOfferTemplate(selectedOffers, availableOffers.offers)}
       </div>
       </div>
@@ -123,12 +130,10 @@ const createEditPointTemplate = (point = {}) => {
   );
 };
 export default class EditPoint extends AbstractStatefulView {
-  #point = null;
 
-  constructor(point) {
+  constructor(point = BLANK_POINT) {
     super();
     this._state = EditPoint.parsePointToState(point);
-    this.#point = point;
     this.#setInnerHandlers();
   }
 
@@ -182,9 +187,43 @@ export default class EditPoint extends AbstractStatefulView {
     });
   };
 
+  /* #eventDestinationToggleHandler = (evt) => {
+    evt.preventDefault();
+    //Когда выбираем пункт назначения в выпадающем списке, то там есть только название name, поэтому для description и pictures сделал случайное формирование заново
+    this.updateElement({
+      destination: {
+        description: getRandomItem(destinations).description,
+        name: evt.target.value,
+        pictures: [
+          {
+            src: `http://picsum.photos/248/152?r=${getRandomInteger(0, 1000)}`,
+            description: getRandomItem(destinations).description
+          },
+          {
+            src: `http://picsum.photos/248/152?r=${getRandomInteger(0, 1000)}`,
+            description: getRandomItem(destinations).description
+          },
+          {
+            src: `http://picsum.photos/248/152?r=${getRandomInteger(0, 1000)}`,
+            description: getRandomItem(destinations).description
+          },
+          {
+            src: `http://picsum.photos/248/152?r=${getRandomInteger(0, 1000)}`,
+            description: getRandomItem(destinations).description
+          },
+          {
+            src: `http://picsum.photos/248/152?r=${getRandomInteger(0, 1000)}`,
+            description: getRandomItem(destinations).description
+          }
+        ]
+      }
+    });
+  }; */
+
+
   #changeDestinationHandler = (evt) => {
     evt.preventDefault();
-    if (evt.target.name !== 'event-input') {
+    if (evt.target.name !== 'event__input  event__input--destination') {
       return;
     }
 
@@ -194,9 +233,10 @@ export default class EditPoint extends AbstractStatefulView {
     });
   };
 
+  //внутренние слушатели
   #setInnerHandlers = () => {
     this.element.querySelector('.event__type-list').addEventListener('change', this.#changeTypeHandler);
-    this.element.querySelector('.event__input').addEventListener('change', this.#changeDestinationHandler);
+    this.element.querySelector('.event__field-group.event__field-group--destination').addEventListener('change', this.#changeDestinationHandler);
     this.element.querySelectorAll('.event__offer-checkbox').forEach((checkbox) => {
       checkbox.addEventListener('change', this.#changeOfferHandler);
       checkbox.addEventListener('change', this.#changeDestinationInfoHandler);
@@ -223,17 +263,17 @@ export default class EditPoint extends AbstractStatefulView {
   // метод для добавления описания и фотографий при выборе в места
   #changeDestinationInfoHandler = (evt) => {
     evt.preventDefault();
-    let destination = [...this._state.destination];
+    let destinationS = [...this._state.destination];
     const destinationValue = Number(evt.target.value);
-    const destinationIndex = destination.findIndex((destination) => destination === destinationValue);
+    const destinationIndex = destinationS.findIndex((destination) => destination === destinationValue);
     if (destinationIndex !== -1) {
-      destination = [...destination.slice(0, destinationIndex), ...destination.slice(destinationIndex + 1, destination.length)];
+      destinationS = [...destinationS.slice(0, destinationIndex), ...destinationS.slice(destinationIndex + 1, destinationS.length)];
     } else {
-      destination.push(destinationValue);
+      destinationS.push(destinationValue);
     }
 
     this.updateElement({
-      destination: destination,
+      destination: destinationS,
     });
   };
 

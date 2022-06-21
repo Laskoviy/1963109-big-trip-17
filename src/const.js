@@ -19,9 +19,13 @@ const BLANK_POINT = {
   basePrice: '',
   dateFrom: '',
   dateTo: '',
-  destination: '',
+  destination: {
+    description: '',
+    name: '',
+    pictures: []
+  },
   isFavorite: false,
-  offers: '',
+  offers: [],
   type: ''
 };
 
@@ -31,4 +35,6 @@ const Mode = {
   EDITING: 'EDITING', //редактирование
 };
 
-export { THOUSAND, SIXTY, FilterType, SortType, BLANK_POINT, Mode };
+const DESTINATION_NAMES = ['Amsterdam', 'Chamonix', 'Geneva'];
+
+export { DESTINATION_NAMES, THOUSAND, SIXTY, FilterType, SortType, BLANK_POINT, Mode };
