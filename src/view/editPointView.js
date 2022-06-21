@@ -174,6 +174,7 @@ export default class EditPoint extends AbstractStatefulView {
     this._callback.buttonClose();
   };
 
+  //обработчик изменения типа
   #changeTypeHandler = (evt) => {
     evt.preventDefault();
     if (evt.target.name !== 'event-type') {
@@ -219,7 +220,7 @@ export default class EditPoint extends AbstractStatefulView {
     });
   }; */
 
-
+  //обработчик изменения места назначения
   #changeDestinationHandler = (evt) => {
     evt.preventDefault();
     if (evt.target.name !== 'event__input--destination') {
@@ -228,7 +229,7 @@ export default class EditPoint extends AbstractStatefulView {
 
     this.updateElement({
       checkedDestination: evt.target.value,
-      destination: []
+      destination: {}
     }
     );
   };
@@ -281,7 +282,7 @@ export default class EditPoint extends AbstractStatefulView {
   static parsePointToState = (point) => ({
     ...point,
     checkedType: point.type,
-    checkedDestination: point.destination.description
+    checkedDestination: point.destination.description //неправильно!
   });
 
   static parseStateToPoint = (state) => {
@@ -292,7 +293,7 @@ export default class EditPoint extends AbstractStatefulView {
     }
     delete point.checkedType;
 
-    if (point.checkedDestination !== point.destination.name) {
+    if (point.checkedDestination !== point.destination) { //неправильно!
       point.destination = point.checkedDestination;
     }
     delete point.checkedDestination;
