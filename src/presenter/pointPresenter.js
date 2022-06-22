@@ -1,14 +1,10 @@
+import { Mode, UPDATE_TYPE, USER_ACTION } from '../const';
 import { remove, render, replace } from '../framework/render';
+import { isDatesEqual } from '../utils/common';
 import EditPoint from '../view/editPointView';
 import PointInListView from '../view/pointInListView';
 
-//варианты в которых может находиться точка маршрута
-const Mode = {
-  DEFAULT: 'DEFAULT', //обычный
-  EDITING: 'EDITING', //редактирование
-};
 export default class PointPresenter {
-
   #pointListContainer = null;
   #changeData = null;
   #changeMode = null;
@@ -34,9 +30,11 @@ export default class PointPresenter {
     this.#pointComponent = new PointInListView(point);
     this.#pointEditComponent = new EditPoint(point);
 
-    this.#pointComponent.setEditClickHandler(this.#handleEditClick);//подключение обработчика для кнопки редактирования
-    this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);////подключение обработчика для кнопки звездочка/избранное
-    this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);//подключение обработчика для кнопки отправки формы
+    this.#pointComponent.setRollupClickHandler(this.#handleRollupClick);
+    this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick); //подключение обработчика для кнопки звездочка/избранное
+    this.#pointEditComponent.setEditRollupClickHandler(this.#handleRollupEditClick); //подключение обработчика для кнопки редактирования
+    this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit); //подключение обработчика для кнопки отправки формы
+    this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this.#pointComponent, this.#pointListContainer);
@@ -62,6 +60,7 @@ export default class PointPresenter {
 
   resetView = () => { //универсальный метод(для наружного использования) сброса формы на точку
     if (this.#mode !== Mode.DEFAULT) {
+      this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
   };
@@ -82,20 +81,45 @@ export default class PointPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
   };
 
-  #handleEditClick = () => {
+  #handleFormSubmit = (update) => {
+    const isMinorUpdate =
+    !isDatesEqual(this.#point.dateFrom, update.dueFrom) ||
+    !isDatesEqual(this.#point.dateTo, update.dueTo) ||
+    this.#point.basePrice === update.basePrice;
+
+    this.#changeData(
+      USER_ACTION.UPDATE_POINT,
+      isMinorUpdate ? UPDATE_TYPE.MINOR : UPDATE_TYPE.PATCH,
+      update);
+    this.#replaceFormToPoint();
+  };
+
+  #handleRollupClick = () => {
     this.#replacePointToForm();
   };
 
-  #handleFavoriteClick = () => { //метод для обновления задачи через кнопку избранное
-    this.#changeData({...this.#point, isFavorite: !this.#point.isFavorite});
+  #handleRollupEditClick = () => {
+    this.#pointEditComponent.reset(this.#point);
+    this.#replaceFormToPoint();
   };
 
-  #handleFormSubmit = (point) => {//метод для обновления задачи через кнопку save
-    this.#changeData(point);
-    this.#replaceFormToPoint();
+  #handleDeleteClick = (point) => {
+    this.#changeData(
+      USER_ACTION.DELETE_POINT,
+      UPDATE_TYPE.MINOR,
+      point
+    );
+  };
+
+  #handleFavoriteClick = () => {
+    this.#changeData(
+      USER_ACTION.UPDATE_POINT,
+      UPDATE_TYPE.MINOR,
+      {...this.#point, isFavorite: !this.#point.isFavorite});
   };
 }

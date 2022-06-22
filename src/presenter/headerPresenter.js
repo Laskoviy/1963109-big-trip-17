@@ -1,4 +1,5 @@
 import {render} from '../framework/render.js';
+import { pointsModel } from '../main.js';
 import CostInfoMainView from '../view/costInfoMainView.js';
 import TripInfoMainView from '../view/tripInfoMainView.js';
 
@@ -8,7 +9,7 @@ export default class HeaderPresenter {
   #pointsModel = null;
   #boardPoints = [];
 
-  constructor(headerContainer, pointsModel) {
+  constructor(headerContainer) {
     this.#headerContainer = headerContainer;
     this.#pointsModel = pointsModel;
   }
@@ -24,10 +25,10 @@ export default class HeaderPresenter {
       return;
     }
     for (let i = 0; i < 1; i++) {
-      render(new TripInfoMainView(this.#boardPoints[i]), this.#headerContainer);
+      render(new TripInfoMainView(pointsModel), this.#headerContainer);
     }
     for (let i = 0; i < 1; i++) {
-      render(new CostInfoMainView(this.#boardPoints[i]), this.#headerContainer);
+      render(new CostInfoMainView(pointsModel), this.#headerContainer);
     }
   };
 }

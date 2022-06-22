@@ -1,31 +1,41 @@
-import { render, RenderPosition } from '../framework/render.js';
+import { remove, render, RenderPosition } from '../framework/render.js';
 import BoardView from '../view/boardView.js';
 import SortView from '../view/sortView.js';
-/* import AddNewPointView from '../view/addNewPointView.js'; */
 import NoPointsView from '../view/noPointsView.js';
 import TripListView from '../view/tripListView.js';
 import PointPresenter from './pointPresenter.js';
-import { updateItem } from '../utils/common.js';
-import { SortType } from '../const.js';
+// import { updateItem } from '../utils/common.js';
+import { SortType, UPDATE_TYPE, USER_ACTION } from '../const.js';
 import { sortPointDay, sortPointPrice, sortPointTime } from '../utils/event.js';
+import AddNewPointView from '../view/addNewPointView.js';
+import NewEventButtonView from '../view/newEventButtonView.js';
+import { siteTripMainElement } from '../main.js';
 
 export default class BoardPresenter {
   #boardContainer = null;
   #pointsModel = null;
+  #filterModel = null;
+  #changeData = null;
 
   #boardComponent = new BoardView();
   #pointListComponent = new TripListView();
   #sortComponent = new SortView();
   #noPointComponent = new NoPointsView();
+  #addNewPointView = new AddNewPointView();
+  #addNewPointViewButton = new NewEventButtonView();
 
   #boardPoints = [];
   #pointPresenter = new Map();
   #currentSortType = SortType.DAY;
   #sourcedBoardPoints = []; //бекап исходного массива
 
-  constructor(boardContainer, pointsModel) {
+  constructor(boardContainer, pointsModel, filterModel) {
     this.#boardContainer = boardContainer;
     this.#pointsModel = pointsModel;
+    this.#filterModel = filterModel;
+
+    this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   init = () => {
@@ -36,18 +46,63 @@ export default class BoardPresenter {
     this.#sourcedBoardPoints = [...this.#pointsModel.points];
 
     this.#renderBoard();
+    this.#addNewPointView.setNewPointClickHandler(this.#handleNewPointClick);
+    // this.#addNewPointView.setFormSubmitHandler(this.#handleFormSubmit);//подключение обработчика для кнопки отправки формы
   };
 
   #handleModeChange = () => { //метод для изменения варианта представления точки
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
 
-  //метод для изменения/обновления точки
-  #handlePointChange = (updatedPoint) => {
-    this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
-    this.#sourcedBoardPoints = updateItem(this.#sourcedBoardPoints, updatedPoint);
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+  #handleViewAction = (actionType, updateType, update) => {
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
+    switch (actionType) {
+      case USER_ACTION.UPDATE_POINT:
+        this.#pointsModel.updatePoint(updateType, update);
+        break;
+      case USER_ACTION.ADD_POINT:
+        this.#pointsModel.addPoint(updateType, update);
+        break;
+      case USER_ACTION.DELETE_POINT:
+        this.#pointsModel.deletePoint(updateType, update);
+        break;
+    }
   };
+
+  #handleModelEvent = (updateType, data) => {
+    // В зависимости от типа изменений решаем, что делать:
+    switch (updateType) {
+      case UPDATE_TYPE.PATCH:
+        // - обновить часть списка (например, когда поменялось описание)
+        this.#pointPresenter.get(data.id).init(data);
+        break;
+      case UPDATE_TYPE.MINOR:
+        // - обновить список (например, когда задача ушла в архив)
+        this.#clearPointList();
+        this.#renderPointList();
+        break;
+      case UPDATE_TYPE.MAJOR:
+        // - обновить всю доску (например, при переключении фильтра)
+        this.#clearPointList({resetSortType: true});
+        this.#renderPointList();
+        break;
+    }
+  };
+
+  #handleFormSubmit = (point) => {//метод для обновления задачи через кнопку save
+    this.#changeData(point);
+    this.#removeAddNewPoint();
+  };
+
+  // Метод для изменения/обновления точки
+  // #handlePointChange = (updatedPoint) => {
+  //   this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
+  //   this.#sourcedBoardPoints = updateItem(this.#sourcedBoardPoints, updatedPoint);
+  //   this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+  // };
 
   #sortPoints = (sortType) => {
     // 2. Этот исходный массив задач необходим,
@@ -94,16 +149,10 @@ export default class BoardPresenter {
 
   //метод для отрисовки точки
   #renderPoint = (point) => {
-    const pointPresenter = new PointPresenter(this.#pointListComponent.element, this.#handlePointChange, this.#handleModeChange); //создаем экземпляр презентера точки
+    const pointPresenter = new PointPresenter(this.#pointListComponent.element, this.#handleViewAction, this.#handleModeChange); //создаем экземпляр презентера точки
     pointPresenter.init(point);
     this.#pointPresenter.set(point.id, pointPresenter);//добавляем презентер точки в новую коллекцию(Map)
   };
-
-  /* #renderPoints = (from, to) => {
-    this.#boardPoints
-      .slice(from, to)
-      .forEach((point) => this.#renderPoint(point));
-  }; */
 
   //метод для отрисовки пустого поля
   #renderNoPoints = () => {
@@ -121,7 +170,46 @@ export default class BoardPresenter {
     for (let i = 0; i < this.#boardPoints.length; i++) {
       this.#renderPoint(this.#boardPoints[i]);
     }
-    /* render(new AddNewPointView(this.#boardPoints[i]), this.#boardContainer);  */
+  };
+
+  //метод для отрисовки формы создания поинта в списке
+  #renderAddNewPoint = () => {
+    render(this.#addNewPointView, this.#pointListComponent.element, RenderPosition.AFTERBEGIN);
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+  };
+
+  //метод для удаления формы создания поинта в списке
+  #removeAddNewPoint = () => {
+    remove(this.#addNewPointView);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#addNewPointViewButton.element.removeAttribute('disabled', true); //кнопка new Event становится обычной
+  };
+
+  #escKeyDownHandler = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this.#removeAddNewPoint();
+    }
+  };
+
+  //метод для отрисовки кнопки добавления нового поинта в список
+  #renderAddNewPointBtn = () => {
+    render(this.#addNewPointViewButton, siteTripMainElement);
+  };
+
+  #handleNewPointClick = () => {
+    this.#renderAddNewPoint();
+    this.#addNewPointViewButton.element.setAttribute('disabled', true); //кнопка new Event становится серой
+    this.#addNewPointView.setNewPointCancelHandler(this.#handleNewPointCancel);
+    this.#addNewPointView.setFormSubmitHandler(this.#handleNewPointSave);
+  };
+
+  #handleNewPointCancel = () => {
+    this.#removeAddNewPoint();
+  };
+
+  #handleNewPointSave = () => {
+    this.#removeAddNewPoint();
   };
 
   //метод для отрисовки доски
@@ -134,5 +222,6 @@ export default class BoardPresenter {
     this.#renderSort();
     this.#setDefaultSort();
     this.#renderPointList();
+    this.#renderAddNewPointBtn();
   };
 }

@@ -1,9 +1,17 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
+const createCostInfoMainTemplate = (pointsModel) => {
 
-const createCostInfoMainTemplate = (point) => {
-  const { basePrice } = point;
-  const totalPrice = basePrice * 3; //нужно исправлять...
+  //функция для подсчета суммы
+  function sumPrice() {
+    let sum = 0;
+    for (let i = 0; i <arguments.length; i++) {
+      sum += arguments[i].basePrice;
+    }
+    return sum;
+  }
+
+  const totalPrice = sumPrice.apply(null, pointsModel.points);
   return (
     `  <p class="trip-info__cost">
     Total: €&nbsp;<span class="trip-info__cost-value">${totalPrice}</span>
@@ -11,16 +19,16 @@ const createCostInfoMainTemplate = (point) => {
 };
 
 export default class CostInfoMainView extends AbstractView {
-  #point = null;
+  #points = null;
 
-  constructor(point) {
+  constructor(points) {
     super();
-    this.#point = point;
+    this.#points = points;
   }
 
   get template() {
-    if (this.#point) {
-      return createCostInfoMainTemplate(this.#point);
+    if (this.#points) {
+      return createCostInfoMainTemplate(this.#points);
     } else {
       return '<div></div>';
     }
