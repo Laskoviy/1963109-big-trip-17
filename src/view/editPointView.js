@@ -207,16 +207,10 @@ export default class EditPoint extends AbstractStatefulView {
     });
   };
 
-  #focusDestinationHandler = (evt) => {
-    evt.preventDefault();
-    evt.target.value = '';
-  };
-
   //внутренние слушатели
   #setInnerHandlers = () => {
     this.element.querySelector('.event__type-list').addEventListener('change', this.#changeTypeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#changeDestinationHandler);
-    this.element.querySelector('.event__input--destination').addEventListener('focus', this.#focusDestinationHandler);
     this.element.querySelectorAll('.event__offer-checkbox').forEach((checkbox) => {
       checkbox.addEventListener('change', this.#changeOfferHandler);
     });
