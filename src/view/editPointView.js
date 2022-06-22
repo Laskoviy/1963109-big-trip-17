@@ -3,12 +3,17 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { destinations, mockOffers, pointTypes } from '../mock/structures.js';
 import { getTitle, humanizePointDueDateTime } from '../utils/event.js';
 import { capitalise } from '../utils/event.js';
+
+import flatpickr from 'flatpickr';
+
+import 'flatpickr/dist/flatpickr.min.css';
+
 const createEditDateTemplate = (dateFrom, dateTo) => (
   `<label class="visually-hidden" for="event-start-time-1">${dateFrom}</label>
-    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value=${humanizePointDueDateTime(dateFrom)}>
+    <input class="event__input  event__input--time start" id="event-start-time-1" type="text" name="event-start-time" value=${humanizePointDueDateTime(dateFrom)}>
     —
     <label class="visually-hidden" for="event-end-time-1">${dateTo}</label>
-    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value=${humanizePointDueDateTime(dateTo)}></input>`
+    <input class="event__input  event__input--time end" id="event-end-time-1" type="text" name="event-end-time" value=${humanizePointDueDateTime(dateTo)}></input>`
 );
 
 const createDestinationsTemplate = (destinationS, eventDestination) => (
@@ -143,15 +148,30 @@ const createEditPointTemplate = (point = {}) => {
 };
 export default class EditPoint extends AbstractStatefulView {
 
+  #datepicker = null;
+
   constructor(point = BLANK_POINT) {
     super();
     this._state = EditPoint.parsePointToState(point);
     this.#setInnerHandlers();
+    this.#setDateFromDatepicker();
+    this.#setDateToDatepicker();
   }
 
   get template() {
     return createEditPointTemplate(this._state);
   }
+
+// Перегружаем метод родителя removeElement,
+  // чтобы при удалении удалялся более не нужный календарь
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#datepicker) {
+      this.#datepicker.destroy();
+      this.#datepicker = null;
+    }
+  };
 
   reset = (point) => {
     this.updateElement(
@@ -162,6 +182,8 @@ export default class EditPoint extends AbstractStatefulView {
   //востановленные обработчики
   _restoreHandlers = () => {
     this.#setInnerHandlers();
+    this.#setDateFromDatepicker();
+    this.#setDateToDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setFormButtonCloseHandler(this._callback.buttonClose);
   };
@@ -201,6 +223,46 @@ export default class EditPoint extends AbstractStatefulView {
       type: evt.target.value,
       offers: offersIds,
     });
+  };
+
+  #dateFromChangeHandler = ([userDate]) => {
+    this._setState({
+      dateFrom: userDate,
+    });
+  };
+
+  #dateToChangeHandler = ([userDate]) => {
+    this._setState({
+      dateTo: userDate,
+    });
+  };
+
+  #setDateFromDatepicker = () => {
+    if ( this._state.dateFrom ) {
+      this.#datepicker = flatpickr(
+        this.element.querySelector('.event__input.event__input--time.start'),
+        {
+          enableTime: true,
+          dateFormat: 'd/m/y H:i',
+          defaultDate: this._state.dateFrom,
+          onChange: this.#dateFromChangeHandler
+        }
+      );
+    }
+  };
+
+  #setDateToDatepicker = () => {
+    if ( this._state.dateTo ) {
+      this.#datepicker = flatpickr(
+        this.element.querySelector('.event__input.event__input--time.end'),
+        {
+          enableTime: true,
+          dateFormat: 'd/m/y H:i',
+          defaultDate: this._state.dateTo,
+          onChange: this.#dateToChangeHandler
+        }
+      );
+    }
   };
 
   //обработчик изменения места назначения
