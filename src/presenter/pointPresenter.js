@@ -88,9 +88,9 @@ export default class PointPresenter {
 
   #handleFormSubmit = (update) => {
     const isMinorUpdate =
-    !isDatesEqual(this.#point.dateFrom, update.dueFrom) ||
-    !isDatesEqual(this.#point.dateTo, update.dueTo) ||
-    this.#point.basePrice === update.basePrice;
+      !isDatesEqual(this.#point.dateFrom, update.dueFrom) ||
+      !isDatesEqual(this.#point.dateTo, update.dueTo) ||
+      this.#point.basePrice === update.basePrice;
 
     this.#changeData(
       USER_ACTION.UPDATE_POINT,
@@ -98,6 +98,7 @@ export default class PointPresenter {
       update);
     this.#replaceFormToPoint();
   };
+
 
   #handleRollupClick = () => {
     this.#replacePointToForm();
@@ -120,6 +121,6 @@ export default class PointPresenter {
     this.#changeData(
       USER_ACTION.UPDATE_POINT,
       UPDATE_TYPE.MINOR,
-      {...this.#point, isFavorite: !this.#point.isFavorite});
+      { ...this.#point, isFavorite: !this.#point.isFavorite });
   };
 }
