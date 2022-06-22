@@ -62,7 +62,7 @@ const createEditPointTemplate = (point = {}) => {
 
   const availableOffers = mockOffers.find((offer) => offer.type === type); // Доступные офферы по типу поинта
   const selectedOffers = availableOffers.offers.filter((offer) => offers.includes(offer.id)); // Офферы отфильтрованные по id
-  
+
   const dateTemplate = createEditDateTemplate(dateFrom, dateTo);
   const destinationsTemplate = createDestinationsTemplate(DESTINATION_NAMES, destination.name);
   const destinationPhotosTemplate = createDestinationPhotosTemplate(destination.pictures);
@@ -162,7 +162,7 @@ export default class EditPoint extends AbstractStatefulView {
     return createEditPointTemplate(this._state);
   }
 
-// Перегружаем метод родителя removeElement,
+  // Перегружаем метод родителя removeElement,
   // чтобы при удалении удалялся более не нужный календарь
   removeElement = () => {
     super.removeElement();
@@ -191,7 +191,6 @@ export default class EditPoint extends AbstractStatefulView {
   setFormSubmitHandler = (callback) => {
     this._callback.formSubmit = callback;
     this.element.addEventListener('submit', this.#formSubmitHandler); // для кнопки отправки
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler); // для стрелочки
   };
 
   //обработчик формы отправки
@@ -217,8 +216,8 @@ export default class EditPoint extends AbstractStatefulView {
     }
 
     this.updateElement({
-      checkedType: evt.target.value,
-      checkedOffers: []
+      type: evt.target.value,
+      offers: [],
     });
   };
 
@@ -235,7 +234,7 @@ export default class EditPoint extends AbstractStatefulView {
   };
 
   #setDateFromDatepicker = () => {
-    if ( this._state.dateFrom ) {
+    if (this._state.dateFrom) {
       this.#datepicker = flatpickr(
         this.element.querySelector('.event__input.event__input--time.start'),
         {
@@ -249,7 +248,7 @@ export default class EditPoint extends AbstractStatefulView {
   };
 
   #setDateToDatepicker = () => {
-    if ( this._state.dateTo ) {
+    if (this._state.dateTo) {
       this.#datepicker = flatpickr(
         this.element.querySelector('.event__input.event__input--time.end'),
         {
@@ -291,7 +290,7 @@ export default class EditPoint extends AbstractStatefulView {
   // метод для добавления офферов при выборе в состояние
   #changeOfferHandler = (evt) => {
     evt.preventDefault();
-    let offers = [...this._state.checkedOffers];
+    let offers = [...this._state.offers];
     const offerValue = Number(evt.target.value);
     const offerIndex = offers.findIndex((offer) => offer === offerValue);
     if (offerIndex !== -1) {
@@ -301,7 +300,7 @@ export default class EditPoint extends AbstractStatefulView {
     }
 
     this.updateElement({
-      checkedOffers: offers,
+      offers: offers,
     });
   };
 
@@ -311,15 +310,11 @@ export default class EditPoint extends AbstractStatefulView {
 
   static parsePointToState = (point) => ({
     ...point,
-    checkedType: point.type,
-    checkedOffers: [...point.offers],
   });
 
   static parseStateToPoint = (state) => {
     const point = {
       ...state,
-      type: state.checkedType,
-      offers: state.checkedOffers,
     };
 
     return point;
