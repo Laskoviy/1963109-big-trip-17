@@ -43,13 +43,13 @@ const createEditOfferTemplate = (selectedOffers, offers) => {
 };
 
 const createEditPointTemplate = (point = {}) => {
-  const { type, destination, dateFrom, dateTo, offers, basePrice, checkedType, id } = point;
+  const { type, destination, dateFrom, dateTo, offers, basePrice, id } = point;
   //чтобы шаблон корректно отображался с «пустыми» данными.
   const offbasepr = basePrice !== null ? basePrice : '';
   const destinationName = destination.name !== null ? destination.name : '';
   const destinationDescription = destination.description !== null ? destination.description : '';
 
-  const availableOffers = mockOffers.find((offer) => offer.type === checkedType); // Доступные офферы по типу поинта
+  const availableOffers = mockOffers.find((offer) => offer.type === type); // Доступные офферы по типу поинта
   const selectedOffers = availableOffers.offers.filter((offer) => offers.find((offerid) => offerid === offer.id)); // Офферы отфильтрованные по id
 
   const dateTemplate = createEditDateTemplate(dateFrom, dateTo);
@@ -61,7 +61,7 @@ const createEditPointTemplate = (point = {}) => {
     <div class="event__type-wrapper">
       <label class="event__type  event__type-btn" for="event-type-toggle-1">
         <span class="visually-hidden">Choose event type</span>
-        <img class="event__type-icon" width="17" height="17" src="img/icons/${checkedType ? checkedType : type}.png" alt="Event type icon">
+        <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
       </label>
       <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -71,20 +71,21 @@ const createEditPointTemplate = (point = {}) => {
 
           ${pointTypes.map((eventType) => (
       `<div class="event__type-item">
-                          <input id="event-type-${eventType}-${id}"
-                                 class="event__type-input  visually-hidden" type="radio" name="event-type"
-                                 value="${eventType}"
-                                 ${eventType === type && 'checked'}>
-                          <label class="event__type-label  event__type-label--${eventType}"
-                                 for="event-type-${eventType}-${id}">${capitalise(eventType)}</label>
+        <input id="event-type-${eventType}-${id}" class="event__type-input visually-hidden"
+          type="radio" name="event-type"
+          value="${eventType}"
+          ${eventType === type ? 'checked' : ''}
+        >
+        <label class="event__type-label  event__type-label--${eventType}"
+                for="event-type-${eventType}-${id}">${capitalise(eventType)}</label>
       </div>`)).join('')}
         </fieldset>
     </div>
     </div>
 
-    <div class="event__field-group  event__field-group--destination">
-      <label class="event__label  event__type-output" for="event-destination-list-1">
-        ${checkedType ? checkedType : type} ${getTitle(point)}
+    <div class="event__field-group event__field-group--destination">
+      <label class="event__label event__type-output" for="event-destination-list-1">
+        ${type} ${getTitle(point)}
       </label>
       <input class="event__input  event__input--destination" id="event-destination-list-1" type="text" name="event-destination" value=${destinationName} list="destination-list-1">
         <datalist id="destination-list-1">
@@ -181,67 +182,45 @@ export default class EditPoint extends AbstractStatefulView {
       return;
     }
 
+    const offers = mockOffers.find((offer) => offer.type === evt.target.value);
+    const offersIds = offers.offers.map((offer) => offer.id);
+
     this.updateElement({
-      checkedType: evt.target.value,
-      offers: [],
+      type: evt.target.value,
+      offers: offersIds,
     });
   };
-
-  /* #eventDestinationToggleHandler = (evt) => {
-    evt.preventDefault();
-    //Когда выбираем пункт назначения в выпадающем списке, то там есть только название name, поэтому для description и pictures сделал случайное формирование заново
-    this.updateElement({
-      destination: {
-        description: getRandomItem(destinations).description,
-        name: evt.target.value,
-        pictures: [
-          {
-            src: `http://picsum.photos/248/152?r=${getRandomInteger(0, 1000)}`,
-            description: getRandomItem(destinations).description
-          },
-          {
-            src: `http://picsum.photos/248/152?r=${getRandomInteger(0, 1000)}`,
-            description: getRandomItem(destinations).description
-          },
-          {
-            src: `http://picsum.photos/248/152?r=${getRandomInteger(0, 1000)}`,
-            description: getRandomItem(destinations).description
-          },
-          {
-            src: `http://picsum.photos/248/152?r=${getRandomInteger(0, 1000)}`,
-            description: getRandomItem(destinations).description
-          },
-          {
-            src: `http://picsum.photos/248/152?r=${getRandomInteger(0, 1000)}`,
-            description: getRandomItem(destinations).description
-          }
-        ]
-      }
-    });
-  }; */
 
   //обработчик изменения места назначения
   #changeDestinationHandler = (evt) => {
     evt.preventDefault();
-    if (evt.target.name !== 'event__input--destination') {
+    const name = evt.target.value;
+
+    if (name === '') {
       return;
     }
 
+    const destination = destinations.find((point) => point.name === name);
+
     this.updateElement({
-      checkedDestination: evt.target.value,
-      destination: {}
-    }
-    );
+      destination: destination,
+    });
+  };
+
+  #focusDestinationHandler = (evt) => {
+    evt.preventDefault();
+    evt.target.value = '';
   };
 
   //внутренние слушатели
   #setInnerHandlers = () => {
     this.element.querySelector('.event__type-list').addEventListener('change', this.#changeTypeHandler);
-    this.element.querySelector('.event__field-group.event__field-group--destination').addEventListener('change', this.#changeDestinationHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#changeDestinationHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('focus', this.#focusDestinationHandler);
     this.element.querySelectorAll('.event__offer-checkbox').forEach((checkbox) => {
       checkbox.addEventListener('change', this.#changeOfferHandler);
-      checkbox.addEventListener('change', this.#changeDestinationInfoHandler);
     });
+    this.element.querySelector('.event__field-group--price').addEventListener('change', this.#changePriceHandler);
   };
 
   // метод для добавления офферов при выборе в состояние
@@ -261,42 +240,16 @@ export default class EditPoint extends AbstractStatefulView {
     });
   };
 
-  // метод для добавления описания  при выборе в места
-  #changeDestinationInfoHandler = (evt) => { //скорее всего проблема в том что point.destination это обьект а не массив
-    evt.preventDefault();
-    let destinationS = [...this._state.destination];
-    const destinationValue = Number(evt.target.value);
-    const destinationIndex = destinationS.findIndex((destination) => destination === destinationValue);
-    if (destinationIndex !== -1) {
-      destinationS = [...destinationS.slice(0, destinationIndex), ...destinationS.slice(destinationIndex + 1, destinationS.length)];
-    } else {
-      destinationS.push(destinationValue);
-    }
-
-    this.updateElement({
-      destination: destinationS,//тут проблема
-    });
+  #changePriceHandler = (evt) => {
+    this.updateElement({ basePrice: parseInt(evt.target.value, 10) });
   };
-
 
   static parsePointToState = (point) => ({
     ...point,
-    checkedType: point.type,
-    checkedDestination: point.destination.description //неправильно!
   });
 
   static parseStateToPoint = (state) => {
     const point = { ...state };
-
-    if (point.checkedType !== point.type) {
-      point.type = point.checkedType;
-    }
-    delete point.checkedType;
-
-    if (point.checkedDestination !== point.destination) { //неправильно!
-      point.destination = point.checkedDestination;
-    }
-    delete point.checkedDestination;
 
     return point;
   };
