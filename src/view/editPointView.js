@@ -61,8 +61,8 @@ const createEditPointTemplate = (point = {}) => {
   const destinationDescription = destination.description !== null ? destination.description : '';
 
   const availableOffers = mockOffers.find((offer) => offer.type === type); // Доступные офферы по типу поинта
-  const selectedOffers = availableOffers.offers.filter((offer) => offers.find((offerid) => offerid === offer.id)); // Офферы отфильтрованные по id
-
+  const selectedOffers = availableOffers.offers.filter((offer) => offers.includes(offer.id)); // Офферы отфильтрованные по id
+  
   const dateTemplate = createEditDateTemplate(dateFrom, dateTo);
   const destinationsTemplate = createDestinationsTemplate(DESTINATION_NAMES, destination.name);
   const destinationPhotosTemplate = createDestinationPhotosTemplate(destination.pictures);
@@ -216,12 +216,9 @@ export default class EditPoint extends AbstractStatefulView {
       return;
     }
 
-    const offers = mockOffers.find((offer) => offer.type === evt.target.value);
-    const offersIds = offers.offers.map((offer) => offer.id);
-
     this.updateElement({
-      type: evt.target.value,
-      offers: offersIds,
+      checkedType: evt.target.value,
+      checkedOffers: []
     });
   };
 
@@ -294,7 +291,7 @@ export default class EditPoint extends AbstractStatefulView {
   // метод для добавления офферов при выборе в состояние
   #changeOfferHandler = (evt) => {
     evt.preventDefault();
-    let offers = [...this._state.offers];
+    let offers = [...this._state.checkedOffers];
     const offerValue = Number(evt.target.value);
     const offerIndex = offers.findIndex((offer) => offer === offerValue);
     if (offerIndex !== -1) {
@@ -304,7 +301,7 @@ export default class EditPoint extends AbstractStatefulView {
     }
 
     this.updateElement({
-      offers: offers,
+      checkedOffers: offers,
     });
   };
 
@@ -314,11 +311,18 @@ export default class EditPoint extends AbstractStatefulView {
 
   static parsePointToState = (point) => ({
     ...point,
+    checkedType: point.type,
+    checkedOffers: [...point.offers],
   });
 
   static parseStateToPoint = (state) => {
-    const point = { ...state };
+    const point = {
+      ...state,
+      type: state.checkedType,
+      offers: state.checkedOffers,
+    };
 
     return point;
   };
 }
+
