@@ -4,8 +4,8 @@ import SortView from '../view/sortView.js';
 import NoPointsView from '../view/noPointsView.js';
 import TripListView from '../view/tripListView.js';
 import PointPresenter from './pointPresenter.js';
-import { updateItem } from '../utils/common.js';
-import { SortType } from '../const.js';
+// import { updateItem } from '../utils/common.js';
+import { SortType, UPDATE_TYPE, USER_ACTION } from '../const.js';
 import { sortPointDay, sortPointPrice, sortPointTime } from '../utils/event.js';
 import AddNewPointView from '../view/addNewPointView.js';
 import NewEventButtonView from '../view/newEventButtonView.js';
@@ -14,6 +14,7 @@ import { siteTripMainElement } from '../main.js';
 export default class BoardPresenter {
   #boardContainer = null;
   #pointsModel = null;
+  #filterModel = null;
   #changeData = null;
 
   #boardComponent = new BoardView();
@@ -28,9 +29,13 @@ export default class BoardPresenter {
   #currentSortType = SortType.DAY;
   #sourcedBoardPoints = []; //бекап исходного массива
 
-  constructor(boardContainer, pointsModel) {
+  constructor(boardContainer, pointsModel, filterModel) {
     this.#boardContainer = boardContainer;
     this.#pointsModel = pointsModel;
+    this.#filterModel = filterModel;
+
+    this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   init = () => {
@@ -49,17 +54,55 @@ export default class BoardPresenter {
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
 
+  #handleViewAction = (actionType, updateType, update) => {
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
+    switch (actionType) {
+      case USER_ACTION.UPDATE_POINT:
+        this.#pointsModel.updatePoint(updateType, update);
+        break;
+      case USER_ACTION.ADD_POINT:
+        this.#pointsModel.addPoint(updateType, update);
+        break;
+      case USER_ACTION.DELETE_POINT:
+        this.#pointsModel.deletePoint(updateType, update);
+        break;
+    }
+  };
+
+  #handleModelEvent = (updateType, data) => {
+    // В зависимости от типа изменений решаем, что делать:
+    switch (updateType) {
+      case UPDATE_TYPE.PATCH:
+        // - обновить часть списка (например, когда поменялось описание)
+        this.#pointPresenter.get(data.id).init(data);
+        break;
+      case UPDATE_TYPE.MINOR:
+        // - обновить список (например, когда задача ушла в архив)
+        this.#clearPointList();
+        this.#renderPointList();
+        break;
+      case UPDATE_TYPE.MAJOR:
+        // - обновить всю доску (например, при переключении фильтра)
+        this.#clearPointList({resetSortType: true});
+        this.#renderPointList();
+        break;
+    }
+  };
+
   #handleFormSubmit = (point) => {//метод для обновления задачи через кнопку save
     this.#changeData(point);
     this.#removeAddNewPoint();
   };
 
   // Метод для изменения/обновления точки
-  #handlePointChange = (updatedPoint) => {
-    this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
-    this.#sourcedBoardPoints = updateItem(this.#sourcedBoardPoints, updatedPoint);
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
-  };
+  // #handlePointChange = (updatedPoint) => {
+  //   this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
+  //   this.#sourcedBoardPoints = updateItem(this.#sourcedBoardPoints, updatedPoint);
+  //   this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+  // };
 
   #sortPoints = (sortType) => {
     // 2. Этот исходный массив задач необходим,
@@ -106,7 +149,7 @@ export default class BoardPresenter {
 
   //метод для отрисовки точки
   #renderPoint = (point) => {
-    const pointPresenter = new PointPresenter(this.#pointListComponent.element, this.#handlePointChange, this.#handleModeChange); //создаем экземпляр презентера точки
+    const pointPresenter = new PointPresenter(this.#pointListComponent.element, this.#handleViewAction, this.#handleModeChange); //создаем экземпляр презентера точки
     pointPresenter.init(point);
     this.#pointPresenter.set(point.id, pointPresenter);//добавляем презентер точки в новую коллекцию(Map)
   };

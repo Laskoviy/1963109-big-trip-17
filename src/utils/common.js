@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 // Функция из интернета по генерации случайного числа из диапазона
 // Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash..
 const getRandomInteger = (a = 0, b = 1) => {
@@ -27,4 +29,6 @@ const updateItem = (items, update) => {
   ];
 };
 
-export { getRandomInteger, getRandomItem, updateItem };
+const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
+
+export { getRandomInteger, getRandomItem, updateItem, isDatesEqual };

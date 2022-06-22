@@ -174,9 +174,8 @@ export default class EditPoint extends AbstractStatefulView {
   };
 
   reset = (point) => {
-    this.updateElement(
-      EditPoint.parsePointToState(point),
-    );
+    this.updateElement(point);
+    this._restoreHandlers();
   };
 
   //востановленные обработчики
@@ -184,8 +183,9 @@ export default class EditPoint extends AbstractStatefulView {
     this.#setInnerHandlers();
     this.#setDateFromDatepicker();
     this.#setDateToDatepicker();
-    this.setFormSubmitHandler(this._callback.formSubmit);
-    this.setFormButtonCloseHandler(this._callback.buttonClose);
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupClickHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
   };
 
   setFormSubmitHandler = (callback) => {
@@ -199,13 +199,24 @@ export default class EditPoint extends AbstractStatefulView {
     this._callback.formSubmit(EditPoint.parseStateToPoint(this._state));
   };
 
-  setFormButtonCloseHandler = (callback) => {
-    this._callback.buttonClose = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formButtonCloseHandler);
+  setEditRollupClickHandler = (callback) => {
+    this._callback.rollupClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupClickHandler);
   };
 
-  #formButtonCloseHandler = () => {
-    this._callback.buttonClose();
+  #rollupClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.rollupClick();
+  };
+
+  setDeleteClickHandler = (callback) => {
+    this._callback.deleteClick = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
+  };
+
+  #deleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.deleteClick(EditPoint.parseStateToPoint(this._state));
   };
 
   //обработчик изменения типа
@@ -219,6 +230,7 @@ export default class EditPoint extends AbstractStatefulView {
       type: evt.target.value,
       offers: [],
     });
+    this._restoreHandlers();
   };
 
   #dateFromChangeHandler = ([userDate]) => {
@@ -269,12 +281,16 @@ export default class EditPoint extends AbstractStatefulView {
     if (name === '') {
       return;
     }
-
-    const destination = destinations.find((point) => point.name === name);
+    const newDestination = destinations.find((destination) => destination.name === name);
 
     this.updateElement({
-      destination: destination,
+      destination: {
+        name: newDestination.name,
+        description: newDestination.description,
+        pictures: [...newDestination.pictures],
+      }
     });
+    this._restoreHandlers();
   };
 
   //внутренние слушатели

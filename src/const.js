@@ -37,4 +37,16 @@ const Mode = {
 
 const DESTINATION_NAMES = ['Amsterdam', 'Chamonix', 'Geneva'];
 
-export { DESTINATION_NAMES, THOUSAND, SIXTY, FilterType, SortType, BLANK_POINT, Mode };
+const USER_ACTION = {
+  UPDATE_POINT: 'UPDATE_TASK',
+  ADD_POINT: 'ADD_TASK',
+  DELETE_POINT: 'DELETE_TASK',
+};
+
+const UPDATE_TYPE = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+export { DESTINATION_NAMES, THOUSAND, SIXTY, FilterType, SortType, BLANK_POINT, Mode, USER_ACTION, UPDATE_TYPE };

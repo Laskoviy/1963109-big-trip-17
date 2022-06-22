@@ -40,6 +40,7 @@ const createPointInListTemplate = (point) => {
     days = (days < 10) ? `0${days}` : days;
     hours = (hours < 10) ? `0${hours}` : hours;
     minutes = (minutes < 10) ? `0${minutes}` : minutes;
+
     return `${days}D ${hours}H ${minutes}M`;
   };
 
@@ -101,9 +102,9 @@ export default class PointInListView extends AbstractView {
     return createPointInListTemplate(this.#point);
   }
 
-  setEditClickHandler = (callback) => { //определяем сеттер(метод) для колбека который вызываем при нажатии на галочку
-    this._callback.editClick = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+  setRollupClickHandler = (callback) => { //определяем сеттер(метод) для колбека который вызываем при нажатии на галочку
+    this._callback.rollupClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupClickHandler);
   };
 
   setFavoriteClickHandler = (callback) => { //определяем сеттер(метод) для колбека который вызываем при нажатии на звездочку
@@ -111,15 +112,14 @@ export default class PointInListView extends AbstractView {
     this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteClickHandler);
   };
 
-  #editClickHandler = (evt) => {
+  #rollupClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.editClick();
+    this._callback.rollupClick();
   };
 
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.favoriteClick();
   };
-
 }
 

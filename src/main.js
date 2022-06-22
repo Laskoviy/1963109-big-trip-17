@@ -5,9 +5,11 @@ import BoardPresenter from './presenter/boardPresenter.js';
 import PointsModel from './model/pointsModel.js';
 import HeaderPresenter from './presenter/headerPresenter.js';
 import { generateFilter } from './mock/filter.js';
+import FilterModel from './model/filterModel.js';
 
 
 export const pointsModel = new PointsModel(); //обьект с массивом поинтов
+export const filterModel = new FilterModel();
 const filters = generateFilter(pointsModel.points);
 
 const sitePageHeaderElement = document.querySelector('.page-header');
@@ -21,7 +23,7 @@ const siteMainElement = document.querySelector('.page-body__page-main');
 const siteMainInnerElement = siteMainElement.querySelector('.page-body__container');
 
 const headerPresenter = new HeaderPresenter(siteTripMainTripInfoElement, pointsModel);
-const boardPresenter = new BoardPresenter(siteMainInnerElement, pointsModel);
+const boardPresenter = new BoardPresenter(siteMainInnerElement, pointsModel, filterModel);
 
 headerPresenter.init();
 
