@@ -42,6 +42,12 @@ const createEditOfferTemplate = (selectedOffers, offers) => {
   return '';
 };
 
+const createDestinationPhotosTemplate = (destinationPhotos) => (
+  `
+    ${destinationPhotos.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`).join('')}
+  `
+);
+
 const createEditPointTemplate = (point = {}) => {
   const { type, destination, dateFrom, dateTo, offers, basePrice, id } = point;
   //чтобы шаблон корректно отображался с «пустыми» данными.
@@ -54,6 +60,7 @@ const createEditPointTemplate = (point = {}) => {
 
   const dateTemplate = createEditDateTemplate(dateFrom, dateTo);
   const destinationsTemplate = createDestinationsTemplate(DESTINATION_NAMES, destination.name);
+  const destinationPhotosTemplate = createDestinationPhotosTemplate(destination.pictures);
   return (
     `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -123,6 +130,11 @@ const createEditPointTemplate = (point = {}) => {
     <section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
       <p class="event__destination-description">${destinationDescription}</p>
+
+      <div class="event__photos-container">
+            <div class="event__photos-tape">
+              ${destinationPhotosTemplate}
+            </div>
     </section>
   </section>
 </form>
