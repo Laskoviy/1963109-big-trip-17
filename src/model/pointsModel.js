@@ -1,6 +1,6 @@
 import Observable from '../framework/observable.js';
 import { generatePoint } from '../mock/structures.js';
-
+//модуль 7 задание 1
 export default class PointsModel extends Observable {
   #points = Array.from({ length: 10 }, generatePoint);
 
