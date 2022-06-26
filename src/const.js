@@ -1,6 +1,8 @@
 const THOUSAND = 1000;
 const SIXTY = 60;
 
+const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+
 //варианты фильтрации
 const FilterType = {
   EVERYTHING: 'everything',
@@ -16,9 +18,9 @@ const SortType = {
 };
 
 const BLANK_POINT = {
-  basePrice: '',
-  dateFrom: '',
-  dateTo: '',
+  basePrice: 0,
+  dateFrom: null,
+  dateTo: null,
   destination: {
     description: '',
     name: '',
@@ -29,6 +31,18 @@ const BLANK_POINT = {
   type: ''
 };
 
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
 //варианты в которых может находиться точка маршрута
 const Mode = {
   DEFAULT: 'DEFAULT', //обычный
@@ -37,4 +51,4 @@ const Mode = {
 
 const DESTINATION_NAMES = ['Amsterdam', 'Chamonix', 'Geneva'];
 
-export { DESTINATION_NAMES, THOUSAND, SIXTY, FilterType, SortType, BLANK_POINT, Mode };
+export { EVENT_TYPES, UpdateType, UserAction, DESTINATION_NAMES, THOUSAND, SIXTY, FilterType, SortType, BLANK_POINT, Mode };

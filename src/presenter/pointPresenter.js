@@ -1,4 +1,4 @@
-import { Mode } from '../const';
+import { Mode, UpdateType, UserAction } from '../const';
 import { remove, render, replace } from '../framework/render';
 import EditPoint from '../view/editPointView';
 import PointInListView from '../view/pointInListView';
@@ -32,6 +32,10 @@ export default class PointPresenter {
     this.#pointComponent.setEditClickHandler(this.#handleEditClick);//подключение обработчика для кнопки редактирования
     this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);////подключение обработчика для кнопки звездочка/избранное
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);//подключение обработчика для кнопки отправки формы
+    this.#pointEditComponent.setEditClickHandler(this.#handleFormClose);
+    this.#pointEditComponent.setCancelClickHandler(this.#handleFormClose);
+    this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
+
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this.#pointComponent, this.#pointListContainer);
@@ -57,6 +61,7 @@ export default class PointPresenter {
 
   resetView = () => { //универсальный метод(для наружного использования) сброса формы на точку
     if (this.#mode !== Mode.DEFAULT) {
+      this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
   };
@@ -77,6 +82,7 @@ export default class PointPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
   };
@@ -92,5 +98,18 @@ export default class PointPresenter {
   #handleFormSubmit = (point) => {//метод для обновления задачи через кнопку save
     this.#changeData({ ...this.#point, ...point });
     this.#replaceFormToPoint();
+  };
+
+  #handleFormClose = () => { //метод для закрытия формы
+    this.#pointEditComponent.reset(this.#point);
+    this.#replaceFormToPoint();
+  };
+
+  #handleDeleteClick = (point) => {
+    this.#changeData(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
   };
 }
