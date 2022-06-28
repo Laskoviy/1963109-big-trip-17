@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 
 const humanizePointDueTime = (dateFrom) => dayjs(dateFrom).format('HH:mm');
 const humanizePointDueDate = (dateFrom) => dayjs(dateFrom).format('MMM D');
-const FullDate = (date) => date !== null ? dayjs(date).format('DD/MM/YY HH:mm') : '';
+const fullDate = (date) => date !== null ? dayjs(date).format('DD/MM/YY HH:mm') : '';
 //фильтры
 const isPointExpired = (dateFrom) => dateFrom && dayjs().isAfter(dateFrom, 'D');//past
 const isPointAhead = (dateFrom) => dateFrom && dayjs().isBefore(dateFrom, 'D');//future
@@ -52,4 +52,4 @@ const getTitle = (boardPoint) => {
 const sortPointPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;//сортировка по убыванию по цене поездки
 const capitalise = (word) => word.slice(0, 1).toUpperCase() + word.slice(1);
 
-export { getTitle, humanizePointDueTime, capitalise, humanizePointDueDate, FullDate, isPointExpired, isPointAhead, sortPointDay, sortPointTime, sortPointPrice };
+export { getTitle, humanizePointDueTime, capitalise, humanizePointDueDate, fullDate, isPointExpired, isPointAhead, sortPointDay, sortPointTime, sortPointPrice };

@@ -22,7 +22,7 @@ export default class BoardPresenter {
 
   #pointItemPresenter = new Map();
   #pointNewPresenter = null;
-  #currentSortType = SortType.DEFAULT;
+  #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
 
   constructor(pointContainer, pointsModel, filterModel) {
@@ -42,7 +42,7 @@ export default class BoardPresenter {
     const filteredPoints = filter[this.#filterType](points);
 
     switch (this.#currentSortType) {
-      case SortType.DEFAULT:
+      case SortType.DAY:
         return filteredPoints.sort(sortPointDay);//
       case SortType.TIME:
         return filteredPoints.sort(sortPointTime);//
@@ -58,7 +58,7 @@ export default class BoardPresenter {
   };
 
   createPoint = (callback) => {
-    this.#currentSortType = SortType.DEFAULT;
+    this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#pointNewPresenter.init(callback);
   };
@@ -92,7 +92,7 @@ export default class BoardPresenter {
         this.#renderPointSection();
         break;
       case UpdateType.MAJOR:
-        this.#clearPointSection({resetSortType: true});
+        this.#clearPointSection({ resetSortType: true });
         this.#renderPointSection();
         break;
     }
@@ -130,7 +130,7 @@ export default class BoardPresenter {
     render(this.#noPointComponent, this.#pointComponent.element, RenderPosition.AFTERBEGIN);
   };
 
-  #clearPointSection = ({resetSortType = false} = {}) => {
+  #clearPointSection = ({ resetSortType = false } = {}) => {
     this.#pointNewPresenter.destroy();
     this.#pointItemPresenter.forEach((presenter) => presenter.destroy());
     this.#pointItemPresenter.clear();
@@ -142,7 +142,7 @@ export default class BoardPresenter {
     }
 
     if (resetSortType) {
-      this.#currentSortType = SortType.DEFAULT;
+      this.#currentSortType = SortType.DAY;
     }
   };
 

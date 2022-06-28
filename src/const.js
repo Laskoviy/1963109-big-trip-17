@@ -1,7 +1,7 @@
 const THOUSAND = 1000;
 const SIXTY = 60;
 
-const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const POINT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
 //варианты фильтрации
 const FilterType = {
@@ -51,4 +51,4 @@ const Mode = {
 
 const DESTINATION_NAMES = ['Amsterdam', 'Chamonix', 'Geneva'];
 
-export { EVENT_TYPES, UpdateType, UserAction, DESTINATION_NAMES, THOUSAND, SIXTY, FilterType, SortType, BLANK_POINT, Mode };
+export { POINT_TYPES, UpdateType, UserAction, DESTINATION_NAMES, THOUSAND, SIXTY, FilterType, SortType, BLANK_POINT, Mode };

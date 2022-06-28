@@ -1,6 +1,6 @@
-import { BLANK_POINT, EVENT_TYPES } from '../const.js';
+import { BLANK_POINT, POINT_TYPES } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { FullDate } from '../utils/event.js';
+import { fullDate } from '../utils/event.js';
 import { OFFERS } from '../mock/offers';
 
 import flatpickr from 'flatpickr';
@@ -68,8 +68,8 @@ const createDestinationPhotosTemplate = (destinationPhotos) => (
 const createEventEditTemplate = (point) => {
   const { basePrice, dateFrom, dateTo, destination, offers, type, isEdit } = point;
 
-  const dateFromSlashes = FullDate(dateFrom);
-  const dateToSlashes = FullDate(dateTo);
+  const dateFromSlashes = fullDate(dateFrom);
+  const dateToSlashes = fullDate(dateTo);
 
   const buttonEditTemplate = isEdit
     ? `<button class="event__rollup-btn" type="button">
@@ -77,12 +77,12 @@ const createEventEditTemplate = (point) => {
       </button>`
     : '';
 
-  const eventTypeOffers =
+  const pointTypeOffers =
     OFFERS.find((offer) => offer.type === type)
       ? OFFERS.find((offer) => offer.type === type).offers
       : [];
-  const offersTemplate = createOffersTemplate(eventTypeOffers, offers);
-  const eventTypesTemplate = createPointTypesTemplate(EVENT_TYPES, type);
+  const offersTemplate = createOffersTemplate(pointTypeOffers, offers);
+  const eventTypesTemplate = createPointTypesTemplate(POINT_TYPES, type);
   const destinationNames = DESTINATIONS.map((item) => item['name']);
   const destinationsTemplate = createDestinationsTemplate(destinationNames, destination.name);
   const destinationPhotosTemplate = createDestinationPhotosTemplate(destination.pictures);
@@ -94,7 +94,7 @@ const createEventEditTemplate = (point) => {
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="${type !== '' ? `img/icons/${type}.png` : `img/icons/${EVENT_TYPES[0]}.png`}" alt="Event type icon">
+              <img class="event__type-icon" width="17" height="17" src="${type !== '' ? `img/icons/${type}.png` : `img/icons/${POINT_TYPES[0]}.png`}" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -240,14 +240,15 @@ export default class EditPoint extends AbstractStatefulView {
     this.setDeleteClickHandler(this._callback.deleteClick);
   };
 
-  #eventTypeToggleHandler = (evt) => {
+  #pointTypeToggleHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({
       type: evt.target.value,
+      offers: []
     });
   };
 
-  #eventDestinationToggleHandler = (evt) => {
+  #pointDestinationToggleHandler = (evt) => {
     evt.preventDefault();
     const targetValue = evt.target.value;
     const destinationValue = DESTINATIONS.find((destination) => destination.name === targetValue);
@@ -256,16 +257,16 @@ export default class EditPoint extends AbstractStatefulView {
     });
   };
 
-  #eventOffersToggleHandler = (evt) => {
+  #pointOffersToggleHandler = (evt) => {
     evt.preventDefault();
     const selectedOffers = this._state.offers;
     const targetValue = parseInt(evt.target.value, 10);
     if (evt.target.checked) {
       selectedOffers.push(targetValue);
     } else {
-      const myIndex = selectedOffers.indexOf(targetValue);
-      if (myIndex !== -1) {
-        selectedOffers.splice(myIndex, 1);
+      const offerIndex = selectedOffers.indexOf(targetValue);
+      if (offerIndex !== -1) {
+        selectedOffers.splice(offerIndex, 1);
       }
     }
     this._setState({
@@ -273,7 +274,7 @@ export default class EditPoint extends AbstractStatefulView {
     });
   };
 
-  #eventPriceToggleHandler = (evt) => {
+  #pointPriceToggleHandler = (evt) => {
     evt.preventDefault();
     this._setState({
       basePrice: evt.target.value,
@@ -324,21 +325,21 @@ export default class EditPoint extends AbstractStatefulView {
 
   #setInnerHandlers = () => {
     this.element.querySelector('.event__type-list')
-      .addEventListener('change', this.#eventTypeToggleHandler);
+      .addEventListener('change', this.#pointTypeToggleHandler);
 
     this.element.querySelector('.event__field-group.event__field-group--destination')
-      .addEventListener('change', this.#eventDestinationToggleHandler);
+      .addEventListener('change', this.#pointDestinationToggleHandler);
 
     this.element.querySelector('.event__available-offers')
-      .addEventListener('change', this.#eventOffersToggleHandler);
+      .addEventListener('change', this.#pointOffersToggleHandler);
 
     this.element.querySelector('.event__field-group.event__field-group--price')
-      .addEventListener('change', this.#eventPriceToggleHandler);
+      .addEventListener('change', this.#pointPriceToggleHandler);
   };
 
-  static parseEventToState = (event) => ({
-    ...event,
-    isEdit: Object.prototype.hasOwnProperty.call(event, 'id')
+  static parseEventToState = (point) => ({
+    ...point,
+    isEdit: Object.prototype.hasOwnProperty.call(point, 'id')
   });
 
   static parseStateToEvent = (state) => {
