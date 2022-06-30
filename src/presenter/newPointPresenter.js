@@ -3,7 +3,7 @@ import { UpdateType, UserAction } from '../const';
 import { remove, render, RenderPosition } from '../framework/render';
 import EditPoint from '../view/editPointView';
 
-export default class NewPointPresenter { point
+export default class NewPointPresenter {
   #pointListContainer = null;
   #changeData = null;
   #pointEditComponent = null;
@@ -14,8 +14,8 @@ export default class NewPointPresenter { point
     this.#changeData = changeData;
   }
 
-  init = (callback) => {
-    this.#destroyCallback = callback;
+  init = () => {
+    this.destroy();
 
     if (this.#pointEditComponent !== null) {
       return;
@@ -37,8 +37,6 @@ export default class NewPointPresenter { point
       return;
     }
 
-    this.#destroyCallback?.();
-
     remove(this.#pointEditComponent);
     this.#pointEditComponent = null;
 
@@ -49,7 +47,7 @@ export default class NewPointPresenter { point
     this.#changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      {id: nanoid(), ...point},
+      { id: nanoid(), ...point },
     );
     this.destroy();
   };

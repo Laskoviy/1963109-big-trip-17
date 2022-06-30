@@ -1,7 +1,13 @@
-import { Mode, UpdateType, UserAction } from '../const';
+import { UpdateType, UserAction } from '../const';
 import { remove, render, replace } from '../framework/render';
+import { isDatesEqual } from '../utils/event';
 import EditPoint from '../view/editPointView';
 import PointInListView from '../view/pointInListView';
+
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
 
 export default class PointPresenter {
   #pointListContainer = null;
@@ -12,7 +18,7 @@ export default class PointPresenter {
   #pointEditComponent = null;
 
   #point = null;
-  #mode = Mode.DEFAULT; //по умолчанию точка будет в обычном режиме
+  #mode = Mode.DEFAULT;
 
   constructor(pointListContainer, changeData, changeMode) {
     this.#pointListContainer = pointListContainer;
@@ -22,20 +28,19 @@ export default class PointPresenter {
 
   init = (point) => {
     this.#point = point;
-    //добавляем возможность переиспользования
+
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
 
     this.#pointComponent = new PointInListView(point);
     this.#pointEditComponent = new EditPoint(point);
 
-    this.#pointComponent.setEditClickHandler(this.#handleEditClick);//подключение обработчика для кнопки редактирования
-    this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);////подключение обработчика для кнопки звездочка/избранное
-    this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);//подключение обработчика для кнопки отправки формы
-    this.#pointEditComponent.setEditClickHandler(this.#handleFormClose);
-    this.#pointEditComponent.setCancelClickHandler(this.#handleFormClose);
+    this.#pointComponent.setEditClickHandler(this.#handleEditClick);
+    this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
+    this.#pointEditComponent.setEditClickHandler(this.#handleCloseClick);
+    this.#pointEditComponent.setCancelClickHandler(this.#handleCloseClick);
     this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
-
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this.#pointComponent, this.#pointListContainer);
@@ -59,21 +64,21 @@ export default class PointPresenter {
     remove(this.#pointEditComponent);
   };
 
-  resetView = () => { //универсальный метод(для наружного использования) сброса формы на точку
+  resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
       this.#pointEditComponent.reset(this.#point);
-      this.#replaceFormToPoint();
+      this.#replaceFormToCard();
     }
   };
 
-  #replacePointToForm = () => {
+  #replaceCardToForm = () => {
     replace(this.#pointEditComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#changeMode();
     this.#mode = Mode.EDITING;
   };
 
-  #replaceFormToPoint = () => {
+  #replaceFormToCard = () => {
     replace(this.#pointComponent, this.#pointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
@@ -83,26 +88,38 @@ export default class PointPresenter {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.#pointEditComponent.reset(this.#point);
-      this.#replaceFormToPoint();
+      this.#replaceFormToCard();
     }
   };
 
   #handleEditClick = () => {
-    this.#replacePointToForm();
+    this.#replaceCardToForm();
   };
 
-  #handleFavoriteClick = () => { //метод для обновления задачи через кнопку избранное
-    this.#changeData({ ...this.#point, isFavorite: !this.#point.isFavorite });
-  };
-
-  #handleFormSubmit = (point) => {//метод для обновления задачи через кнопку save
-    this.#changeData({ ...this.#point, ...point });
-    this.#replaceFormToPoint();
-  };
-
-  #handleFormClose = () => { //метод для закрытия формы
+  #handleCloseClick = () => {
     this.#pointEditComponent.reset(this.#point);
-    this.#replaceFormToPoint();
+    this.#replaceFormToCard();
+  };
+
+  #handleFavoriteClick = () => {
+    this.#changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      { ...this.#point, isFavorite: !this.#point.isFavorite },
+    );
+  };
+
+  #handleFormSubmit = (update) => {
+    const isMinorUpdate =
+      !isDatesEqual(this.#point.dateTo, update.dateTo) ||
+      !isDatesEqual(this.#point.dateFrom, update.dateFrom);
+
+    this.#changeData(
+      UserAction.UPDATE_POINT,
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+      update,
+    );
+    this.#replaceFormToCard();
   };
 
   #handleDeleteClick = (point) => {

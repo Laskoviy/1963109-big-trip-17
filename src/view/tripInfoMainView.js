@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizePointDueDate } from '../utils/event.js';
+import { humanizePointDate } from '../utils/event.js';
 
 const createTripInfoMainTemplate = (pointsModel) => {
 
@@ -15,8 +15,8 @@ const createTripInfoMainTemplate = (pointsModel) => {
     return 0;
   });
 
-  const startTripDate = humanizePointDueDate(sortedArr[0].dateFrom);
-  const endTripDate = humanizePointDueDate(sortedArr[sortedArr.length - 1].dateTo);
+  const startTripDate = humanizePointDate(sortedArr[0].dateFrom);
+  const endTripDate = humanizePointDate(sortedArr[sortedArr.length - 1].dateTo);
   const firstDest = sortedArr[0].destination.name;
   const lastDest = sortedArr[sortedArr.length - 1].destination.name;
   return (`
