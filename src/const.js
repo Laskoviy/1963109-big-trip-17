@@ -17,6 +17,7 @@ const SortType = {
   PRICE: 'price',
 };
 
+//пустой бланк для точки маршрута
 const BLANK_POINT = {
   basePrice: 0,
   dateFrom: null,
@@ -31,12 +32,15 @@ const BLANK_POINT = {
   type: ''
 };
 
+//действия пользователя
 const UserAction = {
   UPDATE_POINT: 'UPDATE_POINT',
   ADD_POINT: 'ADD_POINT',
   DELETE_POINT: 'DELETE_POINT',
 };
 
+
+//тип обновления
 const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
