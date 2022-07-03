@@ -31,9 +31,9 @@ export default class BoardPresenter {
     this.#filterModel = filterModel;
 
     this.#pointNewPresenter = new NewPointPresenter(this.#pointListComponent.element, this.#handleViewAction);
-    //добавляем подписку на обновление модели
-    this.#pointsModel.addObserver(this.#handleModelPoint);
-    this.#filterModel.addObserver(this.#handleModelPoint);
+
+    this.#pointsModel.addObserver(this.#handleModelPoint);//
+    this.#filterModel.addObserver(this.#handleModelPoint);//
   }
 
   get points() {
@@ -69,34 +69,29 @@ export default class BoardPresenter {
   };
 
   #handleViewAction = (actionType, updateType, update) => {
-    // Здесь будем вызывать обновление модели.
-    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-    // update - обновленные данные
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#pointsModel.updatePoint(updateType, update);
+        this.#pointsModel.updatePoint(updateType, update);//
         break;
       case UserAction.ADD_POINT:
-        this.#pointsModel.addPoint(updateType, update);
+        this.#pointsModel.addPoint(updateType, update);//
         break;
       case UserAction.DELETE_POINT:
-        this.#pointsModel.deletePoint(updateType, update);
+        this.#pointsModel.deletePoint(updateType, update);//
         break;
     }
   };
 
   #handleModelPoint = (updateType, data) => {
-    // В зависимости от типа изменений решаем, что делать:
     switch (updateType) {
-      case UpdateType.PATCH:// - обновить часть списка (например, когда поменялось описание)
+      case UpdateType.PATCH:
         this.#pointItemPresenter.get(data.id).init(data);
         break;
-      case UpdateType.MINOR:// - обновить список (например, когда задача ушла в архив)
+      case UpdateType.MINOR:
         this.#clearPointSection();
         this.#renderPointSection();
         break;
-      case UpdateType.MAJOR:// - обновить всю доску (например, при переключении фильтра)
+      case UpdateType.MAJOR:
         this.#clearPointSection({ resetSortType: true });
         this.#renderPointSection();
         break;
@@ -135,7 +130,6 @@ export default class BoardPresenter {
     render(this.#noPointComponent, this.#pointComponent.element, RenderPosition.AFTERBEGIN);
   };
 
-  //метод для очестки доски
   #clearPointSection = ({ resetSortType = false } = {}) => {
     this.#pointNewPresenter.destroy();
     this.#pointItemPresenter.forEach((presenter) => presenter.destroy());
