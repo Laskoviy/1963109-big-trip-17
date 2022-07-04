@@ -1,13 +1,8 @@
-import { UpdateType, UserAction } from '../const';
+import { Mode, UpdateType, UserAction } from '../const';
 import { remove, render, replace } from '../framework/render';
 import { isDatesEqual } from '../utils/event';
 import EditPoint from '../view/editPointView';
 import PointInListView from '../view/pointInListView';
-
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
-};
 
 export default class PointPresenter {
   #pointListContainer = null;
