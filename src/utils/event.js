@@ -12,7 +12,7 @@ const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || day
 const getPointOffersByType = (offers, type) => OFFERS.find((offer) => offer.type === type)
   ? OFFERS.find((offer) => offer.type === type).offers
   : [];
-
+//
 const getPointDates = (dateFrom, dateTo) => {
   let dateFromFormat = '';
   let dateToFormat = '';
