@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { getPointDates, humanizePointDate, sortPointDay } from '../utils/event.js';
+import { getPointDates,  sortPointDay } from '../utils/event.js';
 
 const createInfoMainTemplate = (points) => {
   const sortedPoints = [...points];
