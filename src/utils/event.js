@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { OFFERS } from '../mock/offers';
 const humanizePointDate = (date) => date !== null ? dayjs(date).format('MMM D') : '';
 const humanizePointHoursMinutesDate = (date) => date !== null ? dayjs(date).format('hh:mm') : '';
 const humanizePointYearMonthDate = (date) => date !== null ? dayjs(date).format('YYYY-MM-DD') : '';
@@ -7,6 +8,27 @@ const humanizePointFullDate = (date) => date !== null ? dayjs(date).format('YYYY
 const isPointExpired = (dateFrom) => dateFrom && dayjs().isAfter(dateFrom, 'D');//past
 const isPointAhead = (dateFrom) => dateFrom && dayjs().isBefore(dateFrom, 'D');//future
 const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
+
+const getPointOffersByType = (offers, type) => OFFERS.find((offer) => offer.type === type)
+  ? OFFERS.find((offer) => offer.type === type).offers
+  : [];
+
+const getPointDates = (dateFrom, dateTo) => {
+  let dateFromFormat = '';
+  let dateToFormat = '';
+  if ( dateFrom !== null && dateTo !== null ) {
+    const dateFromMonth = dayjs(dateFrom).format('M');
+    const dateToMonth = dayjs(dateTo).format('M');
+    if ( dateFromMonth !== dateToMonth ) {
+      dateFromFormat = dayjs(dateFrom).format('D MMM');
+      dateToFormat = dayjs(dateTo).format('D MMM');
+    } else {
+      dateFromFormat = dayjs(dateFrom).format('D MMM');
+      dateToFormat = dayjs(dateTo).format('D');
+    }
+  }
+  return `${dateFromFormat}&nbsp;&mdash;&nbsp;${dateToFormat}`;
+};
 
 const getPointDuration = (dateFrom, dateTo) => {
   const date1 = dayjs(dateFrom);
@@ -76,4 +98,4 @@ const getTitle = (boardPoint) => {
 const sortPointPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;//сортировка по убыванию по цене поездки
 const capitalise = (word) => word.slice(0, 1).toUpperCase() + word.slice(1);
 
-export { getPointDuration, humanizePointFullDate, getTitle, isDatesEqual, humanizePointDate, capitalise, humanizePointHoursMinutesDate, humanizePointYearMonthDate, isPointExpired, isPointAhead, sortPointDay, sortPointTime, sortPointPrice };
+export { getPointOffersByType, getPointDates, getPointDuration, humanizePointFullDate, getTitle, isDatesEqual, humanizePointDate, capitalise, humanizePointHoursMinutesDate, humanizePointYearMonthDate, isPointExpired, isPointAhead, sortPointDay, sortPointTime, sortPointPrice };

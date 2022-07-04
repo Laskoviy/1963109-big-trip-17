@@ -1,36 +1,36 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import { getPointOffersByType } from '../utils/event.js';
 
-const createCostInfoMainTemplate = (pointsModel) => {
-
-  //функция для подсчета суммы
-  function sumPrice() {
-    let sum = 0;
-    for (let i = 0; i <arguments.length; i++) {
-      sum += arguments[i].basePrice;
-    }
+const createInfoCostTemplate = (points, offers) => {
+  const totalCost = points.reduce((sum, point) => {
+    const pointTypeOffers = getPointOffersByType(offers, point.type);
+    const pointOffersSum = pointTypeOffers.reduce((acc, offer) => {
+      if ( point.offers.includes(offer.id) ) {
+        acc += offer.price;
+      }
+      return acc;
+    }, 0);
+    sum += point.basePrice + pointOffersSum;
     return sum;
-  }
+  }, 0);
 
-  const totalPrice = sumPrice.apply(null, pointsModel.points);
   return (
-    `  <p class="trip-info__cost">
-    Total: €&nbsp;<span class="trip-info__cost-value">${totalPrice}</span>
-  </p>`);
+    `<p class="trip-info__cost">
+      Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalCost}</span>
+    </p>`
+  );
 };
 
-export default class CostInfoMainView extends AbstractView {
-  #points = null;
 
-  constructor(points) {
+export default class InfoCostView extends AbstractView {
+  #pointsModel = null;
+
+  constructor(pointsModel) {
     super();
-    this.#points = points;
+    this.#pointsModel = pointsModel;
   }
 
   get template() {
-    if (this.#points) {
-      return createCostInfoMainTemplate(this.#points);
-    } else {
-      return '<div></div>';
-    }
+    return createInfoCostTemplate(this.#pointsModel ? this.#pointsModel.points : [], this.#pointsModel ? this.#pointsModel.offers : []);
   }
 }

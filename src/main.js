@@ -33,8 +33,8 @@ const handleNewPointButtonClick = () => {
 render(newPointButtonComponent, siteMainElement);
 newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
 
-render(new TripInfoMainView(), siteInfoElement);
-render(new CostInfoMainView(), siteInfoElement);
+render(new TripInfoMainView(pointsModel), siteInfoElement);
+render(new CostInfoMainView(pointsModel), siteInfoElement);
 
 filterPresenter.init();
 pointPresenter.init();
