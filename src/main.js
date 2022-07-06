@@ -17,7 +17,7 @@ const sitePageBodyElement = sitePageMainElement.querySelector('.page-body__conta
 
 const pointsModel = new PointsModel();
 const filterModel = new FilterModel();
-const pointPresenter = new BoardPresenter(sitePageBodyElement, pointsModel, filterModel);
+const pointPresenter = new BoardPresenter(sitePageBodyElement, pointsModel, filterModel); //Передадим модель фильтров в презентер доски
 const filterPresenter = new FilterPresenter(siteFilterElement, filterModel, pointsModel);
 const newPointButtonComponent = new NewPointButtonView();
 

@@ -45,6 +45,7 @@ export default class FilterView extends AbstractView {
     return createFilterTemplate(this.#filters, this.#currentFilter);
   }
 
+  //В представлении фильтров реализуем механизм подписки на выбор нового фильтра
   setFilterTypeChangeHandler = (callback) => {
     this._callback.filterTypeChange = callback;
     this.element.addEventListener('change', this.#filterTypeChangeHandler);

@@ -31,11 +31,11 @@ export default class PointPresenter {
     this.#pointEditComponent = new EditPoint(point);
 
     this.#pointComponent.setEditClickHandler(this.#handleEditClick);
-    this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
-    this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
-    this.#pointEditComponent.setEditClickHandler(this.#handleCloseClick);
-    this.#pointEditComponent.setCancelClickHandler(this.#handleCloseClick);
-    this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
+    this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick); //Добавим подписку на клик по звездочке
+    this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit); //Добавим подписку на клик по кнопке отправки
+    this.#pointEditComponent.setEditClickHandler(this.#handleCloseClick); //Добавим подписку на клик по стрелочке
+    this.#pointEditComponent.setCancelClickHandler(this.#handleCloseClick); //Добавим подписку на клик по кнопке отмены
+    this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick); //Добавим подписку на клик по кнопке удаления
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this.#pointComponent, this.#pointListContainer);
@@ -62,18 +62,18 @@ export default class PointPresenter {
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
       this.#pointEditComponent.reset(this.#point);
-      this.#replaceFormToCard();
+      this.#replaceFormToPoint();
     }
   };
 
-  #replaceCardToForm = () => {
+  #replacePointToForm = () => {
     replace(this.#pointEditComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#changeMode();
     this.#mode = Mode.EDITING;
   };
 
-  #replaceFormToCard = () => {
+  #replaceFormToPoint = () => {
     replace(this.#pointComponent, this.#pointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
@@ -83,17 +83,17 @@ export default class PointPresenter {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.#pointEditComponent.reset(this.#point);
-      this.#replaceFormToCard();
+      this.#replaceFormToPoint();
     }
   };
 
   #handleEditClick = () => {
-    this.#replaceCardToForm();
+    this.#replacePointToForm();
   };
 
   #handleCloseClick = () => {
     this.#pointEditComponent.reset(this.#point);
-    this.#replaceFormToCard();
+    this.#replaceFormToPoint();
   };
 
   #handleFavoriteClick = () => {
@@ -105,6 +105,8 @@ export default class PointPresenter {
   };
 
   #handleFormSubmit = (update) => {
+    // Проверяем, поменялись ли в задаче данные, которые попадают под фильтрацию,
+    // а значит требуют перерисовки списка - если таких нет, это PATCH-обновление
     const isMinorUpdate =
       !isDatesEqual(this.#point.dateTo, update.dateTo) ||
       !isDatesEqual(this.#point.dateFrom, update.dateFrom);
@@ -114,7 +116,7 @@ export default class PointPresenter {
       isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
       update,
     );
-    this.#replaceFormToCard();
+    this.#replaceFormToPoint();
   };
 
   #handleDeleteClick = (point) => {

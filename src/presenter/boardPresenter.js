@@ -37,17 +37,18 @@ export default class BoardPresenter {
   }
 
   get points() {
+    //В геттере points презентера кроме текущей сортировки учтем текущий фильтр
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
     const filteredPoints = filter[this.#filterType](points);
 
-    switch (this.#currentSortType) {
+    switch (this.#currentSortType) {//условие, чтобы учитывалась выбранная сортировка
       case SortType.DAY:
-        return filteredPoints.sort(sortPointDay);//
+        return filteredPoints.sort(sortPointDay);
       case SortType.TIME:
-        return filteredPoints.sort(sortPointTime);//
+        return filteredPoints.sort(sortPointTime);
       case SortType.PRICE:
-        return filteredPoints.sort(sortPointPrice);//
+        return filteredPoints.sort(sortPointPrice);
     }
 
     return filteredPoints;
@@ -69,6 +70,10 @@ export default class BoardPresenter {
   };
 
   #handleViewAction = (actionType, updateType, update) => {
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this.#pointsModel.updatePoint(updateType, update);//
@@ -83,15 +88,16 @@ export default class BoardPresenter {
   };
 
   #handleModelPoint = (updateType, data) => {
+    // В зависимости от типа изменений решаем, что делать:
     switch (updateType) {
-      case UpdateType.PATCH:
+      case UpdateType.PATCH: // - обновить часть списка (например, когда поменялось описание)
         this.#pointItemPresenter.get(data.id).init(data);
         break;
-      case UpdateType.MINOR:
+      case UpdateType.MINOR: // - обновить список (например, когда задача ушла в архив)
         this.#clearPointSection();
         this.#renderPointSection();
         break;
-      case UpdateType.MAJOR:
+      case UpdateType.MAJOR: // - обновить всю доску (например, при переключении фильтра)
         this.#clearPointSection({ resetSortType: true });
         this.#renderPointSection();
         break;

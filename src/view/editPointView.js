@@ -174,6 +174,7 @@ export default class EditPoint extends AbstractStatefulView {
     return createPointEditTemplate(this._state);
   }
 
+  //обработчик клика на стрелочку
   setEditClickHandler = (callback) => {
     if (this.element.querySelector('.event__rollup-btn')) {
       this._callback.editClick = callback;
@@ -181,6 +182,7 @@ export default class EditPoint extends AbstractStatefulView {
     }
   };
 
+  //обработчик клика на кнопку отмены
   setCancelClickHandler = (callback) => {
     if (this.element.querySelector('.event__reset-btn.cancel')) {
       this._callback.editClick = callback;
@@ -218,6 +220,7 @@ export default class EditPoint extends AbstractStatefulView {
     );
   };
 
+  //обработчик клика на кнопку удаления
   setDeleteClickHandler = (callback) => {
     if (this.element.querySelector('.event__reset-btn.delete')) {
       this._callback.deleteClick = callback;
