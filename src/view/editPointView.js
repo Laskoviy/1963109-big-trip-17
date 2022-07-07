@@ -339,8 +339,7 @@ export default class EditPoint extends AbstractStatefulView {
       .addEventListener('change', this.#pointPriceToggleHandler);
   };
 
-  static parsePointToState = (point) => ({
-    ...point,
+  static parsePointToState = (point) => ({...point,
     isEdit: Object.prototype.hasOwnProperty.call(point, 'id')
   });
 

@@ -1,7 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { getPointDates,  sortPointDay } from '../utils/event.js';
+/* import { getPointDates,  sortPointDay } from '../utils/event.js'; */
 
-const createInfoMainTemplate = (points) => {
+/* const createInfoMainTemplate = (points) => {
   const sortedPoints = [...points];
   sortedPoints.sort(sortPointDay);
 
@@ -44,5 +44,17 @@ export default class TripInfoMainView extends AbstractView {
     return createInfoMainTemplate(this.#pointsModel ? this.#pointsModel.points : []);
   }
 }
+ */
 
+const createInfoMainTemplate = () => (
+  `<div class="trip-info__main">
+    <h1 class="trip-info__title">Amsterdam &mdash; Chamonix &mdash; Geneva</h1>
 
+    <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
+  </div>`
+);
+export default class TripInfoMainView extends AbstractView {
+  get template() {
+    return createInfoMainTemplate();
+  }
+}

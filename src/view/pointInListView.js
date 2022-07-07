@@ -1,7 +1,5 @@
-/* import dayjs from 'dayjs'; */
 import AbstractView from '../framework/view/abstract-view.js';
 import { OFFERS } from '../mock/offers.js';
-/* import { mockOffers } from '../mock/structures.js'; */
 import { getPointDuration, humanizePointDate, humanizePointFullDate, humanizePointHoursMinutesDate, humanizePointYearMonthDate } from '../utils/event.js';
 
 const createOfferTemplate = (offer) => `

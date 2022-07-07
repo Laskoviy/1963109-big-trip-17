@@ -1,4 +1,3 @@
-
 import { render } from './framework/render.js';
 import BoardPresenter from './presenter/boardPresenter.js';
 import PointsModel from './model/pointsModel.js';
@@ -23,11 +22,13 @@ const newPointButtonComponent = new NewPointButtonView();
 
 const handleNewPointFormClose = () => {
   newPointButtonComponent.element.disabled = false;
+  /* newPointButtonComponent.removeAttribute('disabled'); */
 };
 
 const handleNewPointButtonClick = () => {
   pointPresenter.createPoint(handleNewPointFormClose);
   newPointButtonComponent.element.disabled = true;
+  /* newPointButtonComponent.setAttribute('disabled'); */
 };
 
 render(newPointButtonComponent, siteMainElement);

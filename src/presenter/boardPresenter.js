@@ -9,7 +9,6 @@ import { sortPointDay, sortPointPrice, sortPointTime } from '../utils/event.js';
 import NewPointPresenter from './newPointPresenter.js';
 import { filter } from '../utils/filter.js';
 
-
 export default class BoardPresenter {
   #pointContainer = null;
   #pointsModel = null;
