@@ -1,32 +1,41 @@
-import FilterView from './view/filterView.js';
 import { render } from './framework/render.js';
 import BoardPresenter from './presenter/boardPresenter.js';
-
 import PointsModel from './model/pointsModel.js';
-import HeaderPresenter from './presenter/headerPresenter.js';
-import { generateFilter } from './mock/filter.js';
 import FilterModel from './model/filterModel.js';
+import NewPointButtonView from './view/newPointButtonView.js';
+import FilterPresenter from './presenter/filterPresenter.js';
+import PointsApiService from './view/pointApiService.js';
 
+const AUTHORIZATION = 'Basic ekIyu26ddDDguPXj';
+const END_POINT = 'https://17.ecmascript.pages.academy/big-trip';
 
-export const pointsModel = new PointsModel(); //обьект с массивом поинтов
-export const filterModel = new FilterModel();
-const filters = generateFilter(pointsModel.points);
+const siteMainElement = document.querySelector('.trip-main');
+const siteFilterElement = siteMainElement.querySelector('.trip-controls__filters');
+const siteInfoElement = siteMainElement.querySelector('.trip-main__trip-info');
 
-const sitePageHeaderElement = document.querySelector('.page-header');
-const sitePageHeaderContainerElement = sitePageHeaderElement.querySelector('.page-header__container');
-export const siteTripMainElement = sitePageHeaderContainerElement.querySelector('.trip-main');
-export const siteTripMainTripInfoElement = siteTripMainElement.querySelector('.trip-main__trip-info');
-const siteDownElement = siteTripMainElement.querySelector('.trip-main__trip-controls');
-const siteControls = siteDownElement.querySelector('.trip-controls__filters');
+const sitePageMainElement = document.querySelector('.page-body__page-main');
+const sitePageBodyElement = sitePageMainElement.querySelector('.page-body__container');
 
-const siteMainElement = document.querySelector('.page-body__page-main');
-const siteMainInnerElement = siteMainElement.querySelector('.page-body__container');
+const pointsModel = new PointsModel(new PointsApiService(END_POINT, AUTHORIZATION));
+const filterModel = new FilterModel();
+const pointPresenter = new BoardPresenter(sitePageBodyElement, pointsModel, filterModel, siteInfoElement);
 
-const headerPresenter = new HeaderPresenter(siteTripMainTripInfoElement, pointsModel);
-const boardPresenter = new BoardPresenter(siteMainInnerElement, pointsModel, filterModel);
+const filterPresenter = new FilterPresenter(siteFilterElement, filterModel, pointsModel);
+const newPointButtonComponent = new NewPointButtonView();
 
-headerPresenter.init();
+const handleNewPointFormClose = () => {
+  newPointButtonComponent.element.disabled = false;
+};
 
-render(new FilterView(filters), siteControls);
+const handleNewPointButtonClick = () => {
+  pointPresenter.createPoint(handleNewPointFormClose);
+  newPointButtonComponent.element.disabled = true;
+};
 
-boardPresenter.init();
+filterPresenter.init();
+pointPresenter.init();
+pointsModel.init()
+  .finally(() => {
+    render(newPointButtonComponent, siteMainElement);
+    newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
+  });
