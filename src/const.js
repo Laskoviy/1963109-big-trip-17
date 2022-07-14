@@ -17,21 +17,6 @@ const SortType = {
   PRICE: 'price',
 };
 
-//пустой бланк для точки маршрута
-const BLANK_POINT = {
-  basePrice: 0,
-  dateFrom: null,
-  dateTo: null,
-  destination: {
-    description: '',
-    name: '',
-    pictures: []
-  },
-  isFavorite: false,
-  offers: [],
-  type: ''
-};
-
 //действия пользователя
 const UserAction = {
   UPDATE_POINT: 'UPDATE_POINT',
@@ -55,4 +40,4 @@ const Mode = {
 
 const DESTINATION_NAMES = ['Amsterdam', 'Chamonix', 'Geneva'];
 
-export { POINT_TYPES, UpdateType, UserAction, DESTINATION_NAMES, THOUSAND, SIXTY, FilterType, SortType, BLANK_POINT, Mode };
+export { POINT_TYPES, UpdateType, UserAction, DESTINATION_NAMES, THOUSAND, SIXTY, FilterType, SortType, Mode };

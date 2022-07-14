@@ -21,14 +21,13 @@ export default class PointPresenter {
     this.#changeMode = changeMode;
   }
 
-  init = (point) => {
+  init = (point, pointsModel) => {
     this.#point = point;
 
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
-
-    this.#pointComponent = new PointInListView(point);
-    this.#pointEditComponent = new EditPoint(point);
+    this.#pointComponent = new PointInListView(point, pointsModel);
+    this.#pointEditComponent = new EditPoint(pointsModel, point);
 
     this.#pointComponent.setEditClickHandler(this.#handleEditClick);
     this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick); //Добавим подписку на клик по звездочке
@@ -47,7 +46,8 @@ export default class PointPresenter {
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#pointEditComponent, prevPointEditComponent);
+      replace(this.#pointComponent, prevPointEditComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevPointComponent);
@@ -64,6 +64,41 @@ export default class PointPresenter {
       this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
+  };
+
+  setSaving = () => {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointEditComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  };
+
+  setDeleting = () => {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointEditComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  };
+
+  setAborting = () => {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#pointComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#pointEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#pointEditComponent.shake(resetFormState);
   };
 
   #replacePointToForm = () => {
@@ -108,8 +143,12 @@ export default class PointPresenter {
     // Проверяем, поменялись ли в задаче данные, которые попадают под фильтрацию,
     // а значит требуют перерисовки списка - если таких нет, это PATCH-обновление
     const isMinorUpdate =
+      this.#point.destination.name !== update.destination.name ||
+      this.#point.basePrice !== update.basePrice ||
       !isDatesEqual(this.#point.dateTo, update.dateTo) ||
-      !isDatesEqual(this.#point.dateFrom, update.dateFrom);
+      !isDatesEqual(this.#point.dateFrom, update.dateFrom) ||
+      this.#point.type !== update.type ||
+      this.#point.offers.length !== update.offers.length;
 
     this.#changeData(
       UserAction.UPDATE_POINT,

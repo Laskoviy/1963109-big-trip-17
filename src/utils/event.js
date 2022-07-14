@@ -1,19 +1,12 @@
 import dayjs from 'dayjs';
-import { OFFERS } from '../mock/offers';
-const humanizePointDate = (date) => date !== null ? dayjs(date).format('MMM D') : '';
-const humanizePointHoursMinutesDate = (date) => date !== null ? dayjs(date).format('hh:mm') : '';
-const humanizePointYearMonthDate = (date) => date !== null ? dayjs(date).format('YYYY-MM-DD') : '';
-const humanizePointFullDate = (date) => date !== null ? dayjs(date).format('YYYY-MM-DDTHH:mm') : '';
-//фильтры
-const isPointExpired = (dateFrom) => dateFrom && dayjs().isAfter(dateFrom, 'D');//past
-const isPointAhead = (dateFrom) => dateFrom && dayjs().isBefore(dateFrom, 'D');//future
-const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
 
-const getPointOffersByType = (offers, type) => OFFERS.find((offer) => offer.type === type)
-  ? OFFERS.find((offer) => offer.type === type).offers
-  : [];
-//
-const getPointDates = (dateFrom, dateTo) => {
+const humanizeDate = (date) => date !== null ? dayjs(date).format('MMM D') : '';
+const hoursMinutesDate = (date) => date !== null ? dayjs(date).format('hh:mm') : '';
+const yearMonthDate = (date) => date !== null ? dayjs(date).format('YYYY-MM-DD') : '';
+const fullDate = (date) => date !== null ? dayjs(date).format('YYYY-MM-DDTHH:mm') : '';
+const slashesFullDate = (date) => date !== null ? dayjs(date).format('DD/MM/YY HH:mm') : '';
+
+const getEventDates = (dateFrom, dateTo) => {
   let dateFromFormat = '';
   let dateToFormat = '';
   if ( dateFrom !== null && dateTo !== null ) {
@@ -30,7 +23,7 @@ const getPointDates = (dateFrom, dateTo) => {
   return `${dateFromFormat}&nbsp;&mdash;&nbsp;${dateToFormat}`;
 };
 
-const getPointDuration = (dateFrom, dateTo) => {
+const getEventDuration = (dateFrom, dateTo) => {
   const date1 = dayjs(dateFrom);
   const date2 = dayjs(dateTo);
   const allMinutes = date2.diff(date1, 'minutes');
@@ -53,49 +46,33 @@ const getPointDuration = (dateFrom, dateTo) => {
   return `${minutesWithZero}M`;
 };
 
-// Функция помещает задачи без даты в конце списка,
-// возвращая нужный вес для колбэка sort
-const getWeight = (a, b) => {
-  if (a === null && b === null) {
-    return 0;
-  }
+const getEventOffersByType = (offers, type) => offers.find((offer) => offer.type === type)
+  ? offers.find((offer) => offer.type === type).offers
+  : [];
 
-  if (a === null) {
-    return 1;
-  }
+const isEventFuture = (dateFrom) => dateFrom && dayjs().isBefore(dateFrom, 'D');
+const isEventPast = (dateTo) => dateTo && dayjs().isAfter(dateTo, 'D');
 
-  if (b === null) {
-    return -1;
-  }
-
-  return null;
+const sortEventDay = (eventA, eventB) => {
+  const dateFromA = dayjs(eventA.dateFrom);
+  const dateFromB = dayjs(eventB.dateFrom);
+  return dateFromA.diff(dateFromB);
 };
 
-const sortPointDay = (pointA, pointB) => {//сортировка по убыванию по дню
-  const weight = getWeight(pointA.dateFrom, pointB.dateFrom);
+const sortEventTime = (eventA, eventB) => {
+  const date1A = dayjs(eventA.dateFrom);
+  const date2A = dayjs(eventA.dateTo);
+  const durationEventA = date2A.diff(date1A);
 
-  return weight ?? dayjs(pointB.dateFrom).diff(dayjs(pointA.dateFrom));
+  const date1B = dayjs(eventB.dateFrom);
+  const date2B = dayjs(eventB.dateTo);
+  const durationEventB = date2B.diff(date1B);
+
+  return durationEventB - durationEventA;
 };
 
-const sortPointTime = (pointA, pointB) => {//сортировка по убыванию по времени поездки не работает!
-  const durationPointA = dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom));
-  const durationPointB = dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom));
+const sortEventPrice = (eventA, eventB) => eventB.basePrice - eventA.basePrice;
 
-  return durationPointB - durationPointA;
-};
+const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'minutes');
 
-const getTitle = (boardPoint) => {
-  let pretextTitle = 'to';
-  if (boardPoint.type.includes('sightseeing') || boardPoint.type.includes('restaurant')) {
-    pretextTitle = 'in';
-  }
-  if (boardPoint.type.includes('check-in')) {
-    pretextTitle = 'at';
-  }
-  return pretextTitle;
-};
-
-const sortPointPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;//сортировка по убыванию по цене поездки
-const capitalise = (word) => word.slice(0, 1).toUpperCase() + word.slice(1);
-
-export { getPointOffersByType, getPointDates, getPointDuration, humanizePointFullDate, getTitle, isDatesEqual, humanizePointDate, capitalise, humanizePointHoursMinutesDate, humanizePointYearMonthDate, isPointExpired, isPointAhead, sortPointDay, sortPointTime, sortPointPrice };
+export {humanizeDate, hoursMinutesDate, yearMonthDate, fullDate, slashesFullDate, getEventDates, getEventDuration, getEventOffersByType, isEventFuture, isEventPast, sortEventDay, sortEventTime, sortEventPrice, isDatesEqual};

@@ -1,6 +1,10 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { OFFERS } from '../mock/offers.js';
-import { getPointDuration, humanizePointDate, humanizePointFullDate, humanizePointHoursMinutesDate, humanizePointYearMonthDate } from '../utils/event.js';
+import {humanizeDate} from '../utils/event.js';
+import {hoursMinutesDate} from '../utils/event.js';
+import {yearMonthDate} from '../utils/event.js';
+import {fullDate} from '../utils/event.js';
+import {getEventDuration} from '../utils/event.js';
+import he from 'he';
 
 const createOfferTemplate = (offer) => `
     <li class="event__offer">
@@ -12,24 +16,22 @@ const createOfferTemplate = (offer) => `
 
 const createOffersTemplate = (offers) => offers.map(createOfferTemplate).join('');
 
-const createEventTemplate = (point) => {
-  const { basePrice, dateFrom, dateTo, destination, isFavorite, offers, type } = point;
+const createPointTemplate = (point, offerItems) => {
+  const {basePrice, dateFrom, dateTo, destination, isFavorite, offers, type} = point;
 
-  const destinationName = destination.name !== null ? destination.name : '';
-
-  const dateFromHumanize = humanizePointDate(dateFrom);
-  const dateFromHoursMinutes = humanizePointHoursMinutesDate(dateFrom);
-  const dateFromYearMonth = humanizePointYearMonthDate(dateFrom);
-  const dateFromFull = humanizePointFullDate(dateFrom);
-  const dateToHoursMinutes = humanizePointHoursMinutesDate(dateTo);
-  const dateToFull = humanizePointFullDate(dateTo);
-  const eventDuration = getPointDuration(dateFrom, dateTo);
+  const dateFromHumanize = humanizeDate(dateFrom);
+  const dateFromHoursMinutes = hoursMinutesDate(dateFrom);
+  const dateFromYearMonth = yearMonthDate(dateFrom);
+  const dateFromFull = fullDate(dateFrom);
+  const dateToHoursMinutes = hoursMinutesDate(dateTo);
+  const dateToFull = fullDate(dateTo);
+  const eventDuration = getEventDuration(dateFrom, dateTo);
 
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn event__favorite-btn--active'
     : 'event__favorite-btn';
 
-  const pointTypeOffer = OFFERS.find((offer) => offer.type === type);
+  const pointTypeOffer = offerItems.find((offer) => offer.type === type);
   const pointOffers = pointTypeOffer ? pointTypeOffer.offers.filter((v) => offers.some((v2) => v.id === v2)) : [];
   const offersTemplate = createOffersTemplate(pointOffers);
 
@@ -40,7 +42,7 @@ const createEventTemplate = (point) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="${type !== '' ? `img/icons/${type}.png` : ''}" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${destinationName}</h3>
+        <h3 class="event__title">${type} ${destination ? he.encode(destination.name) : ''}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime="${dateFromFull}">${dateFromHoursMinutes}</time>
@@ -70,16 +72,18 @@ const createEventTemplate = (point) => {
   );
 };
 
-export default class PointInListView extends AbstractView {
+export default class EventView extends AbstractView {
   #point = null;
+  #pointsModel = null;
 
-  constructor(point) {
+  constructor(point, pointsModel) {
     super();
     this.#point = point;
+    this.#pointsModel = pointsModel;
   }
 
   get template() {
-    return createEventTemplate(this.#point);
+    return createPointTemplate(this.#point, this.#pointsModel ? this.#pointsModel.offers : []);
   }
 
   setEditClickHandler = (callback) => {
@@ -102,4 +106,3 @@ export default class PointInListView extends AbstractView {
     this._callback.favoriteClick();
   };
 }
-

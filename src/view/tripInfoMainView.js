@@ -1,38 +1,38 @@
 import AbstractView from '../framework/view/abstract-view.js';
-/* import { getPointDates,  sortPointDay } from '../utils/event.js'; */
+import { getEventDates, sortEventDay } from '../utils/event.js';
 
-/* const createInfoMainTemplate = (points) => {
-  const sortedPoints = [...points];
-  sortedPoints.sort(sortPointDay);
+const createInfoMainTemplate = (points) => {
+  const sortedEvents = [...points];
+  sortedEvents.sort(sortEventDay);
 
-  const firstPoint = sortedPoints[0];
-  const lastPoint = sortedPoints[sortedPoints.length - 1];
+  const firstEvent = sortedEvents[0];
+  const lastEvent = sortedEvents[sortedEvents.length - 1];
 
-  const firstDestination = firstPoint ? firstPoint.destination.name : '';
-  const lastDestination = lastPoint ? lastPoint.destination.name : '';
+  const firstDestination = firstEvent ? firstEvent.destination.name : '';
+  const lastDestination = lastEvent ? lastEvent.destination.name : '';
   let infoTitle = '';
-  if ( sortedPoints.length > 3 ) {
+  if ( sortedEvents.length > 3 ) {
     infoTitle = `${firstDestination} &mdash; ... &mdash; ${lastDestination}`;
   }
-  if ( sortedPoints.length > 1 && sortedPoints.length < 3 ) {
-    infoTitle = sortedPoints.map(({ destination }) => `${destination.name}`).join(' &mdash; ');
+  if ( sortedEvents.length > 1 && sortedEvents.length < 3 ) {
+    infoTitle = sortedEvents.map(({ destination }) => `${destination.name}`).join(' &mdash; ');
   }
-  if ( sortedPoints.length === 1 ) {
+  if ( sortedEvents.length === 1 ) {
     infoTitle = `${firstDestination}`;
   }
 
-  const pointDates = getPointDates(firstPoint ? firstPoint.dateFrom : null, lastPoint ? lastPoint.dateTo : null);
+  const eventDates = getEventDates(firstEvent ? firstEvent.dateFrom : null, lastEvent ? lastEvent.dateTo : null);
 
   return (
     `<div class="trip-info__main">
       <h1 class="trip-info__title">${infoTitle}</h1>
 
-      <p class="trip-info__dates">${pointDates}</p>
+      <p class="trip-info__dates">${eventDates}</p>
     </div>`
   );
 };
 
-export default class TripInfoMainView extends AbstractView {
+export default class InfoMainView extends AbstractView {
   #pointsModel = null;
 
   constructor(pointsModel) {
@@ -42,19 +42,5 @@ export default class TripInfoMainView extends AbstractView {
 
   get template() {
     return createInfoMainTemplate(this.#pointsModel ? this.#pointsModel.points : []);
-  }
-}
- */
-
-const createInfoMainTemplate = () => (
-  `<div class="trip-info__main">
-    <h1 class="trip-info__title">Amsterdam &mdash; Chamonix &mdash; Geneva</h1>
-
-    <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
-  </div>`
-);
-export default class TripInfoMainView extends AbstractView {
-  get template() {
-    return createInfoMainTemplate();
   }
 }
